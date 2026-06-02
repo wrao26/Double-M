@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOUBLE M — Wellness Center & Academia Premium | Talatona</title>
+<meta name="description" content="DOUBLE M é o wellness center e academia premium em Talatona, Luanda. Performance, disciplina e evolução.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-deep: #050c1a;
+    --blue-dark: #070f22;
+    --blue-mid: #0b1a38;
+    --blue-accent: #1a3a6e;
+    --electric: #2563eb;
+    --electric-bright: #3b82f6;
+    --electric-glow: rgba(37,99,235,0.35);
+    --white: #ffffff;
+    --white-70: rgba(255,255,255,0.7);
+    --white-40: rgba(255,255,255,0.4);
+    --white-15: rgba(255,255,255,0.15);
+    --white-08: rgba(255,255,255,0.08);
+    --gray-dark: #141b2d;
+    --gray-mid: #1e2a42;
+    --gray-line: rgba(255,255,255,0.12);
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-condensed: 'Barlow Condensed', sans-serif;
+    --font-body: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--blue-deep);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--electric);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width 0.2s, height 0.2s, opacity 0.2s;
+  }
+  .cursor-follower {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--electric-bright);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    opacity: 0.5;
+    transition: transform 0.12s ease;
+  }
+
+  /* Loading Screen */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--blue-deep);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .loader-logo {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 10vw, 8rem);
+    letter-spacing: 0.1em;
+    color: var(--white);
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .loader-bar-wrap {
+    width: 200px;
+    height: 2px;
+    background: var(--white-15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .loader-bar {
+    height: 100%;
+    background: var(--electric);
+    width: 0%;
+    border-radius: 2px;
+    transition: width 0.05s linear;
+  }
+  .loader-pct {
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    color: var(--white-40);
+    font-weight: 300;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(5,12,26,0.92);
+    backdrop-filter: blur(20px);
+    padding: 1rem 3rem;
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--electric); }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    color: var(--white-70);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--electric);
+    padding: 0.65rem 1.8rem;
+    border: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .nav-cta:hover { background: var(--electric-bright); transform: translateY(-1px); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 28px; height: 2px;
+    background: var(--white);
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  /* Mobile Nav Overlay */
+  .mobile-nav {
+    display: none;
+    position: fixed; inset: 0;
+    background: var(--blue-deep);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+  .mobile-nav a:hover { color: var(--electric); }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  #hero-canvas {
+    position: absolute; inset: 0;
+    z-index: 0;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(37,99,235,0.18) 0%, transparent 65%),
+                radial-gradient(ellipse at 80% 20%, rgba(37,99,235,0.10) 0%, transparent 55%),
+                linear-gradient(180deg, var(--blue-deep) 0%, #080e20 100%);
+    z-index: 1;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    z-index: 2;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    max-width: 1000px;
+    padding: 0 2rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    color: var(--electric-bright);
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+  }
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 10vw, 10rem);
+    line-height: 0.92;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  .hero-headline .accent { color: var(--electric-bright); }
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300;
+    color: var(--white-70);
+    letter-spacing: 0.03em;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    opacity: 0;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+  }
+  .btn-primary {
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--electric);
+    padding: 1rem 2.5rem;
+    border: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--electric-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(37,99,235,0.5);
+  }
+  .btn-ghost {
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    color: var(--white);
+    background: transparent;
+    padding: 1rem 2.5rem;
+    border: 1px solid var(--white-40);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+    display: inline-block;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-ghost:hover {
+    border-color: var(--electric-bright);
+    background: var(--electric-glow);
+    transform: translateY(-2px);
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+  }
+  .hero-scroll span {
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--white-40);
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--white-40), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    50% { transform: scaleY(0.3); transform-origin: bottom; opacity: 0.5; }
+    100% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  }
+
+  /* SECTION BASE */
+  section { overflow: hidden; }
+  .section-pad { padding: 7rem 0; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+  .section-label {
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    color: var(--electric-bright);
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .section-desc {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--white-70);
+    line-height: 1.8;
+    max-width: 480px;
+  }
+
+  /* STATS BANNER */
+  #stats {
+    background: var(--electric);
+    padding: 1.5rem 0;
+    overflow: hidden;
+  }
+  .stats-ticker {
+    display: flex;
+    gap: 5rem;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
+  }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+  }
+  .stat-label {
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .stat-sep {
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* PROGRAMS */
+  #programs { background: var(--blue-dark); }
+  .programs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+  }
+  .program-card {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    cursor: none;
+    background: var(--gray-dark);
+  }
+  .program-card:first-child { grid-column: span 2; }
+  .program-card-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    background: var(--gray-mid);
+  }
+  .pc1 { background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 100%); }
+  .pc2 { background: linear-gradient(135deg, #0a1628 0%, #152d52 100%); }
+  .pc3 { background: linear-gradient(135deg, #0b1a38 0%, #1e3560 100%); }
+  .pc4 { background: linear-gradient(135deg, #060e1e 0%, #102038 100%); }
+  .pc5 { background: linear-gradient(135deg, #0d1f3c 0%, #0f2548 100%); }
+
+  .program-card:hover .program-card-bg { transform: scale(1.06); }
+  .program-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(5,12,26,0.95) 0%, rgba(5,12,26,0.3) 60%, transparent 100%);
+    z-index: 2;
+    transition: background 0.4s;
+  }
+  .program-card:hover .program-card-overlay {
+    background: linear-gradient(to top, rgba(5,12,26,0.97) 0%, rgba(5,12,26,0.6) 70%, rgba(37,99,235,0.15) 100%);
+  }
+  .program-icon {
+    position: absolute;
+    top: 1.5rem; left: 1.5rem;
+    z-index: 3;
+    width: 48px; height: 48px;
+    border: 1px solid var(--white-15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .program-card:hover .program-icon {
+    border-color: var(--electric);
+    background: var(--electric-glow);
+  }
+  .program-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 2rem;
+    z-index: 3;
+  }
+  .program-tag {
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--electric-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .program-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+  .program-desc {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--white-70);
+    line-height: 1.6;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s;
+    opacity: 0;
+  }
+  .program-card:hover .program-desc { max-height: 80px; opacity: 1; }
+  .program-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--electric-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    transition: gap 0.3s;
+  }
+  .program-card:hover .program-arrow { gap: 0.9rem; }
+  .program-visual {
+    position: absolute; inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.15;
+    font-size: 8rem;
+    filter: blur(1px);
+    transition: opacity 0.4s;
+  }
+  .program-card:hover .program-visual { opacity: 0.08; }
+
+  /* MODALIDADES */
+  #modalidades { background: var(--blue-deep); }
+  .classes-swiper {
+    margin-top: 3rem;
+    overflow: visible;
+  }
+  .class-slide {
+    background: var(--gray-dark);
+    border: 1px solid var(--gray-line);
+    padding: 2rem;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .class-slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--electric);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .class-slide:hover { border-color: var(--electric-bright); background: var(--gray-mid); }
+  .class-slide:hover::before { transform: scaleX(1); }
+  .class-num {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    color: var(--white-08);
+    line-height: 1;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+  .class-slide:hover .class-num { color: rgba(37,99,235,0.2); }
+  .class-tag {
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--electric-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .class-name {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+  .class-desc {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--white-70);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .class-meta {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .class-meta-item {
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--white-40);
+    font-weight: 400;
+  }
+  .class-meta-item strong {
+    color: var(--white);
+    font-weight: 600;
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  /* AMENITIES */
+  #amenities { background: var(--gray-dark); }
+  .amenities-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .amenities-visual {
+    position: relative;
+  }
+  .amen-main {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: var(--gray-mid);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--gray-line);
+  }
+  .amen-main-inner {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 50%, #0b1628 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+    opacity: 0.25;
+  }
+  .amenities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .amen-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--gray-line);
+    align-items: flex-start;
+    cursor: default;
+    transition: padding-left 0.3s;
+  }
+  .amen-item:hover { padding-left: 0.5rem; }
+  .amen-icon {
+    width: 48px; height: 48px;
+    background: var(--blue-mid);
+    border: 1px solid var(--gray-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .amen-item:hover .amen-icon { background: var(--electric-glow); border-color: var(--electric); }
+  .amen-text h4 {
+    font-family: var(--font-condensed);
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .amen-text p {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--white-70);
+    line-height: 1.6;
+  }
+
+  /* LIFESTYLE */
+  #lifestyle { background: var(--blue-deep); }
+  .lifestyle-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5px;
+    margin-top: 4rem;
+  }
+  .life-cell {
+    position: relative;
+    overflow: hidden;
+    background: var(--gray-dark);
+  }
+  .life-cell:nth-child(1) { grid-row: span 2; aspect-ratio: unset; min-height: 500px; }
+  .life-cell:nth-child(2),
+  .life-cell:nth-child(3),
+  .life-cell:nth-child(4),
+  .life-cell:nth-child(5) { aspect-ratio: 1; }
+  .life-inner {
+    width: 100%;
+    height: 100%;
+    background: var(--gray-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    opacity: 0.2;
+    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s;
+    min-height: 220px;
+  }
+  .life-cell:hover .life-inner { transform: scale(1.07); opacity: 0.15; }
+  .life-cell img { transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .life-cell:hover img { transform: scale(1.07); }
+  .life-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(5,12,26,0.9) 0%, transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    z-index: 2;
+  }
+  .life-caption {
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--white-70);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  /* Life gradient backgrounds */
+  .lg1 { background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 50%, #0b1628 100%); }
+  .lg2 { background: linear-gradient(135deg, #060e1e 0%, #2563eb 100%); opacity: 0.3; }
+  .lg3 { background: linear-gradient(135deg, #0b1a38 0%, #152d52 100%); }
+  .lg4 { background: linear-gradient(135deg, #070f22 0%, #1a3a6e 100%); }
+  .lg5 { background: linear-gradient(135deg, #0d1f3c 0%, #0f2548 100%); }
+
+  /* QUOTE */
+  #quote {
+    background: var(--electric);
+    padding: 6rem 0;
+    text-align: center;
+  }
+  .quote-text {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+    max-width: 800px;
+    margin: 0 auto 1rem;
+  }
+  .quote-sub {
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    font-weight: 500;
+    opacity: 0.8;
+    text-transform: uppercase;
+  }
+
+  /* PLANS */
+  #plans { background: var(--blue-dark); }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 4rem;
+  }
+  .plan-card {
+    background: var(--gray-dark);
+    border: 1px solid var(--gray-line);
+    padding: 3rem 2.5rem;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .plan-card.featured {
+    background: var(--blue-mid);
+    border-color: var(--electric);
+    transform: scaleY(1.02);
+    z-index: 2;
+  }
+  .plan-badge {
+    position: absolute;
+    top: -1px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--electric);
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.4rem 1.5rem;
+    white-space: nowrap;
+  }
+  .plan-tier {
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    color: var(--electric-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .plan-name {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+  .plan-divider {
+    height: 1px;
+    background: var(--gray-line);
+    margin: 1.5rem 0;
+  }
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-bottom: 2.5rem;
+  }
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--white-70);
+  }
+  .plan-features li .check {
+    width: 20px; height: 20px;
+    background: var(--electric-glow);
+    border: 1px solid var(--electric);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--electric-bright);
+  }
+  .plan-cta {
+    display: block;
+    text-align: center;
+    font-family: var(--font-condensed);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 1rem;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+    border: 1px solid var(--electric);
+    color: var(--electric-bright);
+  }
+  .plan-cta:hover { background: var(--electric); color: var(--white); }
+  .plan-card.featured .plan-cta {
+    background: var(--electric);
+    color: var(--white);
+  }
+  .plan-card.featured .plan-cta:hover { background: var(--electric-bright); }
+  .plan-note {
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--white-40);
+    text-align: center;
+    margin-top: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--gray-dark); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 5rem;
+    align-items: flex-start;
+  }
+  .contact-info {}
+  .contact-info-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: flex-start;
+  }
+  .contact-info-icon {
+    width: 44px; height: 44px;
+    background: var(--electric-glow);
+    border: 1px solid var(--electric);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .contact-info-text label {
+    font-family: var(--font-condensed);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--electric-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .contact-info-text p {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--white);
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label {
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--white-70);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--blue-mid);
+    border: 1px solid var(--gray-line);
+    color: var(--white);
+    padding: 0.9rem 1.1rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--electric);
+    background: rgba(37,99,235,0.08);
+  }
+  .form-group select option { background: var(--blue-dark); }
+  .form-submit {
+    background: var(--electric);
+    color: var(--white);
+    border: none;
+    padding: 1.1rem 2rem;
+    font-family: var(--font-condensed);
+    font-size: 0.9rem;
+    letter-spacing: 0.25em;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    align-self: flex-start;
+    padding: 1.1rem 3rem;
+  }
+  .form-submit:hover {
+    background: var(--electric-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(37,99,235,0.4);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--blue-deep);
+    border-top: 1px solid var(--gray-line);
+    padding: 4rem 0 2rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+  .footer-brand-logo {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .footer-brand-logo span { color: var(--electric); }
+  .footer-tagline {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--white-40);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+  }
+  .social-btn {
+    width: 40px; height: 40px;
+    border: 1px solid var(--gray-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white-40);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .social-btn:hover {
+    border-color: var(--electric);
+    color: var(--electric-bright);
+    background: var(--electric-glow);
+  }
+  .footer-col-title {
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--electric-bright);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .footer-links a {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--white-70);
+    text-decoration: none;
+    transition: color 0.3s, padding-left 0.3s;
+    display: block;
+  }
+  .footer-links a:hover { color: var(--white); padding-left: 0.3rem; }
+  .footer-bottom {
+    border-top: 1px solid var(--gray-line);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-copy {
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--white-40);
+    font-weight: 400;
+  }
+  .footer-wrao {
+    font-family: var(--font-condensed);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--white-40);
+    text-decoration: none;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .footer-wrao:hover { color: var(--electric-bright); }
+  .footer-wrao span { color: var(--electric-bright); font-weight: 700; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); }
+  .reveal-left { opacity: 0; transform: translateX(-30px); }
+  .reveal-right { opacity: 0; transform: translateX(30px); }
+  .reveal-scale { opacity: 0; transform: scale(0.95); }
+
+  /* SWIPER nav */
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: var(--white) !important;
+    background: var(--gray-dark);
+    border: 1px solid var(--gray-line);
+    width: 48px !important;
+    height: 48px !important;
+    top: auto !important;
+    bottom: -70px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .swiper-button-prev { left: 0 !important; right: auto !important; }
+  .swiper-button-next { left: 60px !important; right: auto !important; }
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
+    background: var(--electric-glow);
+    border-color: var(--electric);
+  }
+  .swiper-button-next::after,
+  .swiper-button-prev::after { font-size: 1rem !important; font-weight: 700; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .programs-grid { grid-template-columns: 1fr 1fr; }
+    .program-card:first-child { grid-column: span 2; }
+    .plans-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .plan-card.featured { transform: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .testimonials-placeholder { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    nav.scrolled { padding: 1rem 1.5rem; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .programs-grid { grid-template-columns: 1fr; }
+    .program-card:first-child { grid-column: span 1; }
+    .program-desc { max-height: 80px; opacity: 1; }
+    .amenities-split { grid-template-columns: 1fr; gap: 3rem; }
+    .lifestyle-grid { grid-template-columns: 1fr 1fr; }
+    .life-cell:nth-child(1) { grid-column: span 2; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .lifestyle-grid { grid-template-columns: 1fr; }
+    .life-cell:nth-child(1) { grid-column: span 1; }
+    .hero-ctas { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo" id="loader-logo">DOUBLE M</div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+  <div class="loader-pct" id="loader-pct">0%</div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">DOUBLE<span>M</span></a>
+  <ul class="nav-links">
+    <li><a href="#programs">Programas</a></li>
+    <li><a href="#modalidades">Modalidades</a></li>
+    <li><a href="#amenities">Espaço</a></li>
+    <li><a href="#plans">Membros</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Inscrever</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#programs" onclick="closeMobileNav()">Programas</a>
+  <a href="#modalidades" onclick="closeMobileNav()">Modalidades</a>
+  <a href="#amenities" onclick="closeMobileNav()">Espaço</a>
+  <a href="#plans" onclick="closeMobileNav()">Membros</a>
+  <a href="#contact" onclick="closeMobileNav()">Contacto</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-img-bg" style="position:absolute;inset:0;z-index:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIwIDEwODAiPgogIDxkZWZzPgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJyZzEiIGN4PSIzNSUiIGN5PSI1NSUiIHI9IjYwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjgiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTIiIHN0b3Atb3BhY2l0eT0iMSIvPjwvcmFkaWFsR3JhZGllbnQ+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9InJnMiIgY3g9IjgwJSIgY3k9IjIwJSIgcj0iNDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMjU2M2ViIiBzdG9wLW9wYWNpdHk9IjAuMyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0idHJhbnNwYXJlbnQiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iYmx1cjEiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjgiLz48L2ZpbHRlcj4KICAgIDxmaWx0ZXIgaWQ9ImJsdXIyIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIzIi8+PC9maWx0ZXI+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9IiMwMjA4MTIiLz4KICA8cmVjdCB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiBmaWxsPSJ1cmwoI3JnMSkiLz4KICA8cmVjdCB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiBmaWxsPSJ1cmwoI3JnMikiLz4KICA8IS0tIGd5bSBmbG9vciAtLT4KICA8cmVjdCB5PSI3MDAiIHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjM4MCIgZmlsbD0iIzA2MGUyMCIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBlcXVpcG1lbnQgc2lsaG91ZXR0ZXMgLS0+CiAgPHJlY3QgeD0iMjAwIiB5PSI1MDAiIHdpZHRoPSIxODAiIGhlaWdodD0iMzAwIiByeD0iNCIgZmlsbD0iIzBhMWEzOCIgb3BhY2l0eT0iMC43Ii8+CiAgPHJlY3QgeD0iMTUwMCIgeT0iNDUwIiB3aWR0aD0iMjIwIiBoZWlnaHQ9IjM1MCIgcng9IjQiIGZpbGw9IiMwYTFhMzgiIG9wYWNpdHk9IjAuNiIvPgogIDwhLS0gYmFyYmVsbCByYWNrIHNpbGhvdWV0dGUgLS0+CiAgPHJlY3QgeD0iODAwIiB5PSI0MDAiIHdpZHRoPSIzMjAiIGhlaWdodD0iNDAiIHJ4PSIzIiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjgiLz4KICA8cmVjdCB4PSI4MzAiIHk9IjQ0MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC43Ii8+CiAgPHJlY3QgeD0iMTA3MCIgeT0iNDQwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjciLz4KICA8IS0tIGF0aGxldGUgc2lsaG91ZXR0ZSBkZWFkbGlmdGluZyAtLT4KICA8ZWxsaXBzZSBjeD0iOTcwIiBjeT0iNjgwIiByeD0iNTUiIHJ5PSIxOCIgZmlsbD0iIzA1MGMxYSIgb3BhY2l0eT0iMC41Ii8+CiAgPHJlY3QgeD0iOTMwIiB5PSI1MjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSIxNjAiIHJ4PSI4IiBmaWxsPSIjMGIxYTM4IiBvcGFjaXR5PSIwLjkiLz4KICA8Y2lyY2xlIGN4PSI5NzAiIGN5PSI0OTAiIHI9IjM1IiBmaWxsPSIjMGIxYTM4IiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI4NTAiIHk9IjYyNSIgd2lkdGg9IjI0MCIgaGVpZ2h0PSIxOCIgcng9IjkiIGZpbGw9IiMxYTNhNmUiIG9wYWNpdHk9IjAuNiIvPgogIDwhLS0gYmFyYmVsbCBwbGF0ZXMgZ2xvdyAtLT4KICA8Y2lyY2xlIGN4PSI4NTUiIGN5PSI2MzQiIHI9IjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iMC40Ii8+CiAgPGNpcmNsZSBjeD0iMTA4NSIgY3k9IjYzNCIgcj0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIzIiBvcGFjaXR5PSIwLjQiLz4KICA8IS0tIGxpZ2h0IGJlYW0gLS0+CiAgPHBvbHlnb24gcG9pbnRzPSI5MDAsMCAxMDQwLDAgMTEwMCw3MDAgODQwLDcwMCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wNCIvPgogIDxwb2x5Z29uIHBvaW50cz0iOTIwLDAgMTAyMCwwIDEwNjAsNzAwIDg4MCw3MDAiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuMDIiLz4KICA8IS0tIGZsb29yIHJlZmxlY3Rpb25zIC0tPgogIDxlbGxpcHNlIGN4PSI5NzAiIGN5PSI3MjAiIHJ4PSIxMjAiIHJ5PSIyMCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wOCIgZmlsdGVyPSJ1cmwoI2JsdXIxKSIvPgogIDwhLS0gYW1iaWVudCBnbG93IC0tPgogIDxjaXJjbGUgY3g9Ijk3MCIgY3k9IjU1MCIgcj0iMjAwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA2IiBmaWx0ZXI9InVybCgjYmx1cjEpIi8+Cjwvc3ZnPg==') center/cover no-repeat;opacity:0.25;"></div>
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Talatona, Luanda · Angola</p>
+    <h1 class="hero-headline">
+      PERFORMANCE.<br><span class="accent">DISCIPLINA.</span><br>EVOLUÇÃO.
+    </h1>
+    <p class="hero-sub">O teu centro de treino e transformação física em Talatona. Onde a força encontra o lifestyle premium.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">Começar Treino</a>
+      <a href="#programs" class="btn-ghost">Ver Programas</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS TICKER -->
+<div id="stats">
+  <div class="stats-ticker" id="stats-ticker">
+    <div class="stat-item"><span class="stat-num">500+</span><span class="stat-label">Membros Activos</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">20+</span><span class="stat-label">Modalidades</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">1000m²</span><span class="stat-label">Espaço Premium</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">6H–22H</span><span class="stat-label">Horário Diário</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">100%</span><span class="stat-label">Equipamento Pro</span></div>
+    <span class="stat-sep">·</span>
+    <!-- Duplicados para loop infinito -->
+    <div class="stat-item"><span class="stat-num">500+</span><span class="stat-label">Membros Activos</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">20+</span><span class="stat-label">Modalidades</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">1000m²</span><span class="stat-label">Espaço Premium</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">6H–22H</span><span class="stat-label">Horário Diário</span></div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item"><span class="stat-num">100%</span><span class="stat-label">Equipamento Pro</span></div>
+    <span class="stat-sep">·</span>
+  </div>
+</div>
+
+<!-- PROGRAMS -->
+<section id="programs" class="section-pad">
+  <div class="container">
+    <div class="programs-header">
+      <div>
+        <span class="section-label reveal">Programas de Treino</span>
+        <h2 class="section-title reveal">ESCOLHE O<br>TEU CAMINHO</h2>
+      </div>
+      <p class="section-desc reveal">Programas desenhados para todos os níveis, com metodologias de alto desempenho e foco em resultados reais.</p>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card reveal-scale">
+        <div class="program-card-bg pc1" style="background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI0MCUiIGN5PSI0MCUiIHI9IjcwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iZ2xvdyI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNiIgcmVzdWx0PSJibHVyIi8+PGZlTWVyZ2U+PGZlTWVyZ2VOb2RlIGluPSJibHVyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzA2MGUxZSIvPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gZHJhbWF0aWMgc2lkZSBsaWdodGluZyAtLT4KICA8cG9seWdvbiBwb2ludHM9IjAsMCAyMDAsMCAzMDAsNjAwIDAsNjAwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA2Ii8+CiAgPCEtLSBtaXJyb3Ivd2FsbCAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWEzYTZlIiBzdHJva2Utd2lkdGg9IjAiIG9wYWNpdHk9IjAiLz4KICA8IS0tIEVxdWlwbWVudCByYWNrIGJnIC0tPgogIDxyZWN0IHg9IjU1MCIgeT0iMTAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjQyMCIgcng9IjMiIGZpbGw9IiMwYTE2MjgiIG9wYWNpdHk9IjAuOCIvPgogIDxyZWN0IHg9IjU3MCIgeT0iMTIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMzgwIiBmaWxsPSIjMGQyMDQ0IiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI3MjAiIHk9IjEyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjM4MCIgZmlsbD0iIzBkMjA0NCIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBkdW1iYmVsbHMgb24gcmFjayAtLT4KICA8cmVjdCB4PSI1ODAiIHk9IjIwMCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSIjMTUyZDUyIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI1ODAiIHk9IjI2MCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSIjMTUyZDUyIiBvcGFjaXR5PSIwLjgiLz4KICA8cmVjdCB4PSI1ODAiIHk9IjMyMCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIyMiIgcng9IjExIiBmaWxsPSIjMTUyZDUyIiBvcGFjaXR5PSIwLjciLz4KICA8IS0tIEF0aGxldGUgYm9keSAtIGZyb250IHZpZXcgYmljZXAgY3VybCAtLT4KICA8ZWxsaXBzZSBjeD0iMzIwIiBjeT0iNTgwIiByeD0iOTAiIHJ5PSIyNSIgZmlsbD0iIzAyMDgxMCIgb3BhY2l0eT0iMC42Ii8+CiAgPCEtLSBsZWdzIC0tPgogIDxyZWN0IHg9IjI3NSIgeT0iNDQwIiB3aWR0aD0iNDUiIGhlaWdodD0iMTQwIiByeD0iMjAiIGZpbGw9IiMwZTFlMzgiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSIzMjUiIHk9IjQ0MCIgd2lkdGg9IjQ1IiBoZWlnaHQ9IjE0MCIgcng9IjIwIiBmaWxsPSIjMGUxZTM4IiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSB0b3JzbyAtLT4KICA8ZWxsaXBzZSBjeD0iMzIwIiBjeT0iMzgwIiByeD0iNjUiIHJ5PSI5MCIgZmlsbD0iIzFhM2E2ZSIgb3BhY2l0eT0iMC4zIi8+CiAgPHJlY3QgeD0iMjYwIiB5PSIzMDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiByeD0iMjAiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gY2hlc3QgZGVmaW5pdGlvbiBsaW5lcyAtLT4KICA8cGF0aCBkPSJNMjcwLDMyMCBRMzIwLDM0MCAzNzAsMzIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxYTM1NjQiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC42Ii8+CiAgPHBhdGggZD0iTTI3MCwzMzUgUTMyMCwzNTAgMzcwLDMzNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWEzNTY0IiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC40Ii8+CiAgPCEtLSBhcm1zIC0gYmljZXAgY3VybCBwb3NpdGlvbiAtLT4KICA8cGF0aCBkPSJNMjYwLDMxMCBRMjIwLDM0MCAyMDAsMzgwIFExOTAsNDEwIDIyMCw0MzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSI0MiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTM4MCwzMTAgUTM5MCwzMzAgMzk1LDM2MCBRNDAwLDQwMCAzODAsNDQwIFEzNzAsNDYwIDM2MCw0NzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSI0MiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBkdW1iYmVsbCBpbiBoYW5kIC0tPgogIDxyZWN0IHg9IjM0MCIgeT0iNDQwIiB3aWR0aD0iNTUiIGhlaWdodD0iMTQiIHJ4PSI3IiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjciLz4KICA8Y2lyY2xlIGN4PSIzNDIiIGN5PSI0NDciIHI9IjE0IiBmaWxsPSIjMWEzYTZlIiBvcGFjaXR5PSIwLjkiLz4KICA8Y2lyY2xlIGN4PSIzOTMiIGN5PSI0NDciIHI9IjE0IiBmaWxsPSIjMWEzYTZlIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIGhlYWQgLS0+CiAgPGNpcmNsZSBjeD0iMzIwIiBjeT0iMjQ1IiByPSI0MiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gZ2xvdyBvbiBhcm0gLS0+CiAgPHBhdGggZD0iTTM4MCwzMTAgUTM5MCwzMzAgMzk1LDM2MCBRNDAwLDQwMCAzODAsNDQwIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjMiIGZpbHRlcj0idXJsKCNnbG93KSIvPgogIDwhLS0gbGlnaHQgc3RyZWFrIC0tPgogIDxwb2x5Z29uIHBvaW50cz0iODAsMCAxNDAsMCAxODAsNjAwIDEyMCw2MDAiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuMDIiLz4KICA8Y2lyY2xlIGN4PSIzMjAiIGN5PSIzODAiIHI9IjE4MCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wNCIgZmlsdGVyPSJ1cmwoI2dsb3cpIi8+Cjwvc3ZnPg==') center/cover no-repeat;"></div>
+        <div class="program-card-overlay"></div>
+        <div class="program-visual">🏋</div>
+        <div class="program-icon">💪</div>
+        <div class="program-content">
+          <span class="program-tag">Programa 01</span>
+          <h3 class="program-name">MUSCULAÇÃO AVANÇADA</h3>
+          <p class="program-desc">Treino de hipertrofia com periodização inteligente. Equipamento Technogym e orientação de personal trainers certificados para maximizar os teus ganhos.</p>
+          <span class="program-arrow">Saber mais →</span>
+        </div>
+      </div>
+      <div class="program-card reveal-scale">
+        <div class="program-card-bg pc2" style="background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSIzMCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFlM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iYmx1ciI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNSIvPjwvZmlsdGVyPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzA1MGMxYyIvPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gZmxvb3IgbGluZXMgLS0+CiAgPGxpbmUgeDE9IjAiIHkxPSI0ODAiIHgyPSI4MDAiIHkyPSI0ODAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjYiLz4KICA8bGluZSB4MT0iMCIgeTE9IjUwMCIgeDI9IjgwMCIgeTI9IjUwMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuNCIvPgogIDwhLS0gYmF0dGxlIHJvcGUgd2F2ZXMgLSBkeW5hbWljIC0tPgogIDxwYXRoIGQ9Ik01MCwzODAgUTEwMCwzNDAgMTYwLDM4MCBRMjIwLDQyMCAyODAsMzcwIFEzNDAsMzIwIDQwMCwzNjUgUTQ2MCw0MTAgNTIwLDM2MCBRNTgwLDMxMCA2NDAsMzU4IFE3MDAsNDA2IDc1MCwzNzAiIHN0cm9rZT0iIzFhM2E2ZSIgc3Ryb2tlLXdpZHRoPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjgiLz4KICA8cGF0aCBkPSJNNTAsNDAwIFExMTAsMzYwIDE3MCw0MDAgUTIzMCw0NDAgMjkwLDM5NSBRMzUwLDM1MCA0MTAsMzkyIFE0NzAsNDM0IDUzMCwzODAgUTU5MCwzMjYgNjUwLDM3OCBRNzEwLDQzMCA3NjAsMzkwIiBzdHJva2U9IiMxNTJkNTIiIHN0cm9rZS13aWR0aD0iMTAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC43Ii8+CiAgPCEtLSBtb3Rpb24gYmx1ciBlZmZlY3Qgb24gcm9wZSAtLT4KICA8cGF0aCBkPSJNNTAsMzgwIFExMDAsMzQwIDE2MCwzODAgUTIyMCw0MjAgMjgwLDM3MCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC4zIiBmaWx0ZXI9InVybCgjYmx1cikiLz4KICA8IS0tIEF0aGxldGUgaW4gc3F1YXQgcG9zaXRpb24gLS0+CiAgPGVsbGlwc2UgY3g9IjQwMCIgY3k9IjUwNSIgcng9IjcwIiByeT0iMTgiIGZpbGw9IiMwMjA4MTAiIG9wYWNpdHk9IjAuNSIvPgogIDwhLS0gbGVncyB3aWRlIHN0YW5jZSAtLT4KICA8cGF0aCBkPSJNMzYwLDQ2MCBRMzMwLDQ5MCAzMTAsNTA1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik00NDAsNDYwIFE0NzAsNDkwIDQ5MCw1MDUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSB0b3JzbyBsZWFuaW5nIGZvcndhcmQgLS0+CiAgPGVsbGlwc2UgY3g9IjQwMCIgY3k9IjM4MCIgcng9IjU1IiByeT0iODUiIGZpbGw9IiMwZjIwNDAiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gYXJtcyBzd2luZ2luZyByb3BlcyAtLT4KICA8cGF0aCBkPSJNMzU1LDM2MCBRMzIwLDM3MCAyODAsMzc1IFEyMDAsMzc4IDE2MCwzODAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNNDQ1LDM2MCBRNDgwLDM1MCA1NDAsMzU1IFE2MjAsMzU4IDY2MCwzNjAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIGhlYWQgLS0+CiAgPGNpcmNsZSBjeD0iNDAwIiBjeT0iMjk1IiByPSIzNSIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBlbmVyZ3kgZ2xvdyAtLT4KICA8Y2lyY2xlIGN4PSI0MDAiIGN5PSIzOTAiIHI9IjE2MCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wNSIgZmlsdGVyPSJ1cmwoI2JsdXIpIi8+CiAgPCEtLSBzd2VhdCBwYXJ0aWNsZXMgLS0+CiAgPGNpcmNsZSBjeD0iNDMwIiBjeT0iMjYwIiByPSIzIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjQiLz4KICA8Y2lyY2xlIGN4PSI0NTAiIGN5PSIyNzUiIHI9IjIiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMyIvPgogIDxjaXJjbGUgY3g9IjM3MCIgY3k9IjI1NSIgcj0iMi41IiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjM1Ii8+CiAgPCEtLSBkcmFtYXRpYyB0b3AgbGlnaHQgLS0+CiAgPGVsbGlwc2UgY3g9IjQwMCIgY3k9IjAiIHJ4PSIyMDAiIHJ5PSIxMDAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+') center/cover no-repeat;"></div>
+        <div class="program-card-overlay"></div>
+        <div class="program-visual">⚡</div>
+        <div class="program-icon">🔥</div>
+        <div class="program-content">
+          <span class="program-tag">Programa 02</span>
+          <h3 class="program-name">TREINO FUNCIONAL</h3>
+          <p class="program-desc">Movimento, potência e performance. Circuitos funcionais que transformam o corpo e elevam a condição física a outro nível.</p>
+          <span class="program-arrow">Saber mais →</span>
+        </div>
+      </div>
+      <div class="program-card reveal-scale">
+        <div class="program-card-bg pc3" style="background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI2MCUiIGN5PSI0MCUiIHI9IjYwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ibWJsdXIiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjQiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMwNDBiMWEiLz4KICA8cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIHRyZWFkbWlsbCBtYWNoaW5lIC0tPgogIDxyZWN0IHg9IjE1MCIgeT0iNDQwIiB3aWR0aD0iNTIwIiBoZWlnaHQ9IjEwMCIgcng9IjE1IiBmaWxsPSIjMGExNjI4IiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSIxNzAiIHk9IjQ1NSIgd2lkdGg9IjQ4MCIgaGVpZ2h0PSI2MCIgcng9IjgiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOCIvPgogIDwhLS0gdHJlYWRtaWxsIGJlbHQgbW92ZW1lbnQgbGluZXMgLS0+CiAgPGxpbmUgeDE9IjIwMCIgeTE9IjQ3NSIgeDI9IjYyMCIgeTI9IjQ3NSIgc3Ryb2tlPSIjMWEzYTZlIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC41Ii8+CiAgPGxpbmUgeDE9IjIwMCIgeTE9IjQ5MCIgeDI9IjYyMCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMWEzYTZlIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC40Ii8+CiAgPCEtLSBjb25zb2xlIC0tPgogIDxyZWN0IHg9IjM2MCIgeT0iMTgwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEzMCIgcng9IjEwIiBmaWxsPSIjMGExNjI4IiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSIzNzUiIHk9IjE5MiIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI5MCIgcng9IjYiIGZpbGw9IiMwNzEyMjAiIG9wYWNpdHk9IjAuOTUiLz4KICA8dGV4dCB4PSI0NjAiIHk9IjI0MCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIyMiIgZmlsbD0iIzI1NjNlYiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC44Ij44LjU8L3RleHQ+CiAgPHRleHQgeD0iNDYwIiB5PSIyNjAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzYjgyZjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+a20vaDwvdGV4dD4KICA8IS0tIGhhbmRsZSBiYXJzIC0tPgogIDxyZWN0IHg9IjM1MCIgeT0iMjkwIiB3aWR0aD0iMTIiIGhlaWdodD0iMTYwIiByeD0iNiIgZmlsbD0iIzBmMjA0MCIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iNTYwIiB5PSIyOTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNjAiIHJ4PSI2IiBmaWxsPSIjMGYyMDQwIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIFJ1bm5lciBzaWxob3VldHRlIC0gbWlkIHN0cmlkZSAtLT4KICA8Y2lyY2xlIGN4PSI0MzAiIGN5PSIyMTUiIHI9IjMyIiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSB0b3JzbyAtLT4KICA8cmVjdCB4PSI0MDAiIHk9IjI0NyIgd2lkdGg9IjYwIiBoZWlnaHQ9IjEwMCIgcng9IjE1IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBydW5uaW5nIGFybXMgLS0+CiAgPHBhdGggZD0iTTQwMCwyNzAgUTM3MCwzMDAgMzU1LDMzNSIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjI2IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNNDYwLDI3MCBRNDkwLDI1NSA1MTAsMjcwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gcnVubmluZyBsZWdzIC0gc3RyaWRlIC0tPgogIDxwYXRoIGQ9Ik00MTUsMzQ1IFEzOTUsMzk1IDM3MCw0NDAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTQ0NSwzNDUgUTQ3MCwzODAgNDkwLDM1MCBRNTEwLDMyMCA1MDUsMjkwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gc3BlZWQgbW90aW9uIGxpbmVzIC0tPgogIDxsaW5lIHgxPSIyMDAiIHkxPSIzMDAiIHgyPSIzMTAiIHkyPSIzMDAiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjIiIGZpbHRlcj0idXJsKCNtYmx1cikiLz4KICA8bGluZSB4MT0iMTgwIiB5MT0iMzIwIiB4Mj0iMjkwIiB5Mj0iMzIwIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjE1IiBmaWx0ZXI9InVybCgjbWJsdXIpIi8+CiAgPGxpbmUgeDE9IjE5MCIgeTE9IjM0MCIgeDI9IjMwMCIgeTI9IjM0MCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC4xMiIgZmlsdGVyPSJ1cmwoI21ibHVyKSIvPgogIDwhLS0gZ2xvdyB1bmRlciBmZWV0IC0tPgogIDxlbGxpcHNlIGN4PSI0MzAiIGN5PSI0NDUiIHJ4PSI4MCIgcnk9IjEyIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjEyIiBmaWx0ZXI9InVybCgjbWJsdXIpIi8+CiAgPGNpcmNsZSBjeD0iNDMwIiBjeT0iMzMwIiByPSIxNTAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMDQiLz4KPC9zdmc+') center/cover no-repeat;"></div>
+        <div class="program-card-overlay"></div>
+        <div class="program-visual">🏃</div>
+        <div class="program-icon">❤️</div>
+        <div class="program-content">
+          <span class="program-tag">Programa 03</span>
+          <h3 class="program-name">CARDIO PERFORMANCE</h3>
+          <p class="program-desc">Resistência, velocidade e endurance. Equipamento cardio de última geração para treinos de alta intensidade e baixo impacto.</p>
+          <span class="program-arrow">Saber mais →</span>
+        </div>
+      </div>
+      <div class="program-card reveal-scale">
+        <div class="program-card-bg pc4" style="background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE1MmQ1MiIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjciLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMwNTBjMWEiLz4KICA8cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIGZsb29yIC0tPgogIDxyZWN0IHk9IjUwMCIgd2lkdGg9IjgwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMwNDBhMTgiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHRyYWluZXIgLS0+CiAgPGNpcmNsZSBjeD0iMjQwIiBjeT0iMjIwIiByPSIzNSIgZmlsbD0iIzBjMWUzYSIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjA4IiB5PSIyNTUiIHdpZHRoPSI2NCIgaGVpZ2h0PSIxMTAiIHJ4PSIxNCIgZmlsbD0iIzBjMWUzYSIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0yMDgsMjc1IFExNzUsMzAwIDE2NSwzNDAiIHN0cm9rZT0iIzBjMWUzYSIgc3Ryb2tlLXdpZHRoPSIyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNMjcyLDI3NSBRMjk1LDI5NSAzMDAsMzMwIFEzMDUsMzYwIDMwMCwzODAiIHN0cm9rZT0iIzBjMWUzYSIgc3Ryb2tlLXdpZHRoPSIyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNMjI1LDM2NSBRMjIwLDQzMCAyMTgsNTAwIiBzdHJva2U9IiMwYzFlM2EiIHN0cm9rZS13aWR0aD0iMjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CiAgPHBhdGggZD0iTTI1NSwzNjUgUTI1OCw0MzAgMjYwLDUwMCIgc3Ryb2tlPSIjMGMxZTNhIiBzdHJva2Utd2lkdGg9IjI4IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gY2xpcGJvYXJkIGluIGhhbmQgLS0+CiAgPHJlY3QgeD0iMjg1IiB5PSIzMTAiIHdpZHRoPSI0NSIgaGVpZ2h0PSI1OCIgcng9IjQiIGZpbGw9IiMxYTNhNmUiIG9wYWNpdHk9IjAuNyIvPgogIDxsaW5lIHgxPSIyOTIiIHkxPSIzMjUiIHgyPSIzMjMiIHkyPSIzMjUiIHN0cm9rZT0iIzNiODJmNiIgc3Ryb2tlLXdpZHRoPSIxLjUiIG9wYWNpdHk9IjAuNiIvPgogIDxsaW5lIHgxPSIyOTIiIHkxPSIzMzUiIHgyPSIzMjMiIHkyPSIzMzUiIHN0cm9rZT0iIzNiODJmNiIgc3Ryb2tlLXdpZHRoPSIxLjUiIG9wYWNpdHk9IjAuNSIvPgogIDxsaW5lIHgxPSIyOTIiIHkxPSIzNDUiIHgyPSIzMTUiIHkyPSIzNDUiIHN0cm9rZT0iIzNiODJmNiIgc3Ryb2tlLXdpZHRoPSIxLjUiIG9wYWNpdHk9IjAuNCIvPgogIDwhLS0gQ2xpZW50IGRvaW5nIHNxdWF0IC0tPgogIDxjaXJjbGUgY3g9IjUyMCIgY3k9IjIxMCIgcj0iMzUiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSI0OTAiIHk9IjI0NSIgd2lkdGg9IjYwIiBoZWlnaHQ9IjEwMCIgcng9IjE0IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBzcXVhdCBwb3NpdGlvbiBsZWdzIC0tPgogIDxwYXRoIGQ9Ik00OTUsMzQwIFE0NzAsMzkwIDQ0NSw0MzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTU0NSwzNDAgUTU3MCwzOTAgNTk1LDQzMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjMyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGFybXMgZXh0ZW5kZWQgZm9yd2FyZCAtLT4KICA8cGF0aCBkPSJNNDkwLDI3MCBRNDU1LDI3NSA0MzAsMjc4IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CiAgPHBhdGggZD0iTTU1MCwyNzAgUTU4NSwyNzUgNjEwLDI3OCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjI2IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gY29ubmVjdGlvbiBsaW5lIGJldHdlZW4gdHJhaW5lciBhbmQgY2xpZW50IC0tPgogIDxsaW5lIHgxPSIzMDAiIHkxPSIzMzAiIHgyPSI0MzAiIHkyPSIyNzgiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtZGFzaGFycmF5PSI2LDQiIG9wYWNpdHk9IjAuMjUiLz4KICA8IS0tIGFtYmllbnQgZ2xvdyBjbGllbnQgLS0+CiAgPGNpcmNsZSBjeD0iNTIwIiBjeT0iMzUwIiByPSIxNDAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMDYiIGZpbHRlcj0idXJsKCNzZikiLz4KICA8IS0tIGRyYW1hdGljIHNpZGUgbGlnaHRpbmcgLS0+CiAgPHBvbHlnb24gcG9pbnRzPSI3MDAsMCA4MDAsMCA4MDAsNjAwIDY4MCw2MDAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMDQiLz4KPC9zdmc+') center/cover no-repeat;"></div>
+        <div class="program-card-overlay"></div>
+        <div class="program-visual">👤</div>
+        <div class="program-icon">🎯</div>
+        <div class="program-content">
+          <span class="program-tag">Programa 04</span>
+          <h3 class="program-name">PERSONAL TRAINING</h3>
+          <p class="program-desc">Treino 1 a 1 totalmente personalizado. O teu personal trainer exclusivo com plano nutricional e acompanhamento contínuo.</p>
+          <span class="program-arrow">Saber mais →</span>
+        </div>
+      </div>
+      <div class="program-card reveal-scale">
+        <div class="program-card-bg pc5" style="background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI0MCUiIHI9IjcwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTAiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iZ2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjEwIi8+PC9maWx0ZXI+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMDQwYjFhIi8+CiAgPHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9InVybCgjYmcpIi8+CiAgPCEtLSBzcGxpdCBjb21wb3NpdGlvbjogYmVmb3JlL2FmdGVyIGNvbmNlcHQgd2l0aCBsaWdodCAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzAzMDkxMiIgb3BhY2l0eT0iMC4zIi8+CiAgPHJlY3QgeD0iNDAwIiB5PSIwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzBhMWEzNSIgb3BhY2l0eT0iMC4yIi8+CiAgPGxpbmUgeDE9IjQwMCIgeTE9IjAiIHgyPSI0MDAiIHkyPSI2MDAiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjMiLz4KICA8IS0tIGxlZnQgZmlndXJlIChiZWZvcmUgY29uY2VwdCAtIGxlc3MgZGVmaW5lZCkgLS0+CiAgPGNpcmNsZSBjeD0iMjAwIiBjeT0iMjAwIiByPSIzOCIgZmlsbD0iIzA5MTgyOCIgb3BhY2l0eT0iMC44Ii8+CiAgPGVsbGlwc2UgY3g9IjIwMCIgY3k9IjM0MCIgcng9IjYwIiByeT0iMTEwIiBmaWxsPSIjMDkxODI4IiBvcGFjaXR5PSIwLjgiLz4KICA8cGF0aCBkPSJNMTQ1LDI5MCBRMTE1LDMyMCAxMDUsMzYwIiBzdHJva2U9IiMwOTE4MjgiIHN0cm9rZS13aWR0aD0iMzIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC44Ii8+CiAgPHBhdGggZD0iTTI1NSwyOTAgUTI4NSwzMjAgMjk1LDM2MCIgc3Ryb2tlPSIjMDkxODI4IiBzdHJva2Utd2lkdGg9IjMyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOCIvPgogIDxwYXRoIGQ9Ik0xNjUsNDQ1IFExNTgsNTAwIDE1NSw1NjAiIHN0cm9rZT0iIzA5MTgyOCIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjgiLz4KICA8cGF0aCBkPSJNMjM1LDQ0NSBRMjQyLDUwMCAyNDUsNTYwIiBzdHJva2U9IiMwOTE4MjgiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC44Ii8+CiAgPCEtLSByaWdodCBmaWd1cmUgKGFmdGVyIGNvbmNlcHQgLSBhdGhsZXRpYykgLS0+CiAgPGNpcmNsZSBjeD0iNjAwIiBjeT0iMTkwIiByPSIzNSIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxyZWN0IHg9IjU3MCIgeT0iMjI1IiB3aWR0aD0iNjAiIGhlaWdodD0iMTA1IiByeD0iMTAiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHYtdGFwZXIgdG9yc28gbGluZXMgLS0+CiAgPHBhdGggZD0iTTU3MCwyMzAgTDU1NSwzMzAiIHN0cm9rZT0iIzFhMzU2NCIgc3Ryb2tlLXdpZHRoPSIxLjUiIG9wYWNpdHk9IjAuNSIvPgogIDxwYXRoIGQ9Ik02MzAsMjMwIEw2NDUsMzMwIiBzdHJva2U9IiMxYTM1NjQiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjUiLz4KICA8cGF0aCBkPSJNNTY1LDMwMCBRNjAwLDMxMCA2MzUsMzAwIiBzdHJva2U9IiMxYTM1NjQiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC40Ii8+CiAgPCEtLSBhdGhsZXRpYyBhcm1zIC0tPgogIDxwYXRoIGQ9Ik01NzAsMjQ1IFE1NDAsMjY1IDUyNSwyOTUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTYzMCwyNDUgUTY2MCwyNjUgNjc1LDI5NSIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjI4IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGxlZ3MgYXRobGV0aWMgLS0+CiAgPHBhdGggZD0iTTU4MCwzMjggUTU2NSw0MDAgNTU1LDQ3MCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjMwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNNjIwLDMyOCBRNjM1LDQwMCA2NDUsNDcwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gZ2xvdyBvbiByaWdodCBmaWd1cmUgLS0+CiAgPGNpcmNsZSBjeD0iNjAwIiBjeT0iMzIwIiByPSIxNzAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMDciIGZpbHRlcj0idXJsKCNnZikiLz4KICA8IS0tIHRyYW5zZm9ybWF0aW9uIGFycm93IC0tPgogIDxwYXRoIGQ9Ik0zMTAsMzAwIFEzNjAsMjg1IDM5MCwyOTUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjUiIG1hcmtlci1lbmQ9InVybCgjYXJyKSIvPgogIDwhLS0gMTIgd2Vla3MgYmFkZ2UgYXJlYSAtLT4KICA8cmVjdCB4PSIzNDAiIHk9IjU1IiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjUwIiByeD0iNCIgZmlsbD0iIzBhMWEzNSIgb3BhY2l0eT0iMC45IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuNCIvPgogIDx0ZXh0IHg9IjQwMCIgeT0iNzYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45Ij4xMiBTRU1BTkFTPC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iOTQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI5IiBmaWxsPSIjOGFiNGY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBvcGFjaXR5PSIwLjciPlRSQU5TRk9STUHDh8ODTzwvdGV4dD4KICA8IS0tIGVuZXJneSBwYXJ0aWNsZXMgLS0+CiAgPGNpcmNsZSBjeD0iNjAwIiBjeT0iMTQwIiByPSI0IiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjUiLz4KICA8Y2lyY2xlIGN4PSI2MjUiIGN5PSIxNTUiIHI9IjIuNSIgZmlsbD0iIzNiODJmNiIgb3BhY2l0eT0iMC40Ii8+CiAgPGNpcmNsZSBjeD0iNTgwIiBjeT0iMTQ4IiByPSIzIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjQ1Ii8+Cjwvc3ZnPg==') center/cover no-repeat;"></div>
+        <div class="program-card-overlay"></div>
+        <div class="program-visual">⭐</div>
+        <div class="program-icon">🔄</div>
+        <div class="program-content">
+          <span class="program-tag">Programa 05</span>
+          <h3 class="program-name">TRANSFORMAÇÃO CORPORAL</h3>
+          <p class="program-desc">Programa intensivo de 12 semanas. Treino, nutrição e mindset integrados para uma transformação real e sustentável.</p>
+          <span class="program-arrow">Saber mais →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODALIDADES -->
+<section id="modalidades" class="section-pad">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:1rem;">
+      <div>
+        <span class="section-label reveal">Aulas & Modalidades</span>
+        <h2 class="section-title reveal">ESCOLHE A<br>TUA AULA</h2>
+      </div>
+      <p class="section-desc reveal">Classes colectivas e treinos especializados para todos os objetivos e níveis de condição física.</p>
+    </div>
+    <div class="swiper classes-swiper" id="classesSwiper" style="margin-top:3rem;padding-bottom:80px;">
+      <div class="swiper-wrapper">
+
+        <div class="swiper-slide class-slide" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNTAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI0MCUiIHI9IjcwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTAiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjYiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwNDBiMWEiLz4KICA8cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIGJveCBqdW1wIHNldHVwIC0tPgogIDxyZWN0IHg9IjI2MCIgeT0iMzUwIiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEzMCIgcng9IjQiIGZpbGw9IiMwODE4MjgiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSIyNjUiIHk9IjM1NSIgd2lkdGg9IjE3MCIgaGVpZ2h0PSIxMCIgcng9IjIiIGZpbGw9IiMwZDIwNDAiIG9wYWNpdHk9IjAuOCIvPgogIDwhLS0ganVtcGVyIG1pZC1haXIgLS0+CiAgPGNpcmNsZSBjeD0iMzUwIiBjeT0iMTgwIiByPSIzMiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxyZWN0IHg9IjMyMiIgeT0iMjEyIiB3aWR0aD0iNTYiIGhlaWdodD0iOTAiIHJ4PSIxMiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gYXJtcyB1cCBtb21lbnR1bSAtLT4KICA8cGF0aCBkPSJNMzIyLDIzMCBRMjk1LDIwNSAyNzUsMTc1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zNzgsMjMwIFE0MDUsMjA1IDQyNSwxNzUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBsZWdzIHR1Y2tlZCBmb3IganVtcCAtLT4KICA8cGF0aCBkPSJNMzMwLDMwMCBRMzEwLDMzNSAzMDUsMzcwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zNzAsMzAwIFEzOTAsMzM1IDM5NSwzNzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBqdW1wIHNoYWRvdy9nbG93IHVuZGVyIC0tPgogIDxlbGxpcHNlIGN4PSIzNTAiIGN5PSIzNjAiIHJ4PSI1NSIgcnk9IjEyIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjE1IiBmaWx0ZXI9InVybCgjc2YpIi8+CiAgPCEtLSBzcGVlZCBsaW5lcyBob3Jpem9udGFsIC0tPgogIDxsaW5lIHgxPSI1MCIgeTE9IjI1MCIgeDI9IjIwMCIgeTI9IjI0MCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9IjAuMiIvPgogIDxsaW5lIHgxPSIzMCIgeTE9IjI3MCIgeDI9IjE4MCIgeTI9IjI2NSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC4xNSIvPgogIDxsaW5lIHgxPSI1MDAiIHkxPSIyNDAiIHgyPSI2NTAiIHkyPSIyNTAiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjIiLz4KICA8IS0tIGVuZXJneSBnbG93IC0tPgogIDxjaXJjbGUgY3g9IjM1MCIgY3k9IjI1MCIgcj0iMTYwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA2IiBmaWx0ZXI9InVybCgjc2YpIi8+CiAgPCEtLSBISUlUIHRpbWVyIGNvbmNlcHQgLS0+CiAgPHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iNCIgZmlsbD0iIzA3MTAyMCIgb3BhY2l0eT0iMC45IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuNSIvPgogIDx0ZXh0IHg9IjgwIiB5PSI1NSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIyMiIgZmlsbD0iIzI1NjNlYiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45Ij4wOjQ1PC90ZXh0PgogIDx0ZXh0IHg9IjgwIiB5PSI3NiIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5XT1JLPC90ZXh0Pgo8L3N2Zz4=') center/cover no-repeat;opacity:0.22;z-index:0;"></div>
+          <div style="position:relative;z-index:1;height:100%;">
+          <span class="class-num">01</span>
+          <span class="class-tag">Alta Intensidade</span>
+          <h3 class="class-name">HIIT POWER</h3>
+          <p class="class-desc">Treino por intervalos de alta intensidade. Queima calórica máxima, condicionamento cardiovascular e fortalecimento muscular num único treino explosivo.</p>
+          <div class="class-meta">
+            <div class="class-meta-item"><strong>45 min</strong>Duração</div>
+            <div class="class-meta-item"><strong>Todos</strong>Nível</div>
+            <div class="class-meta-item"><strong>Daily</strong>Frequência</div>
+          </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide class-slide" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNTAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI0NSUiIGN5PSI0NSUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTAiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iZ2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjgiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwNTBjMWEiLz4KICA8cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIHNxdWF0IHJhY2sgLS0+CiAgPHJlY3QgeD0iODAiIHk9IjgwIiB3aWR0aD0iMTYiIGhlaWdodD0iMzgwIiBmaWxsPSIjMDgxODI4IiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI2MDQiIHk9IjgwIiB3aWR0aD0iMTYiIGhlaWdodD0iMzgwIiBmaWxsPSIjMDgxODI4IiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI4MCIgeT0iODAiIHdpZHRoPSI1NDAiIGhlaWdodD0iMTYiIHJ4PSI0IiBmaWxsPSIjMGExYTMwIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIHNhZmV0eSBiYXJzIC0tPgogIDxyZWN0IHg9IjgwIiB5PSIyODAiIHdpZHRoPSIxNjAiIGhlaWdodD0iMTIiIHJ4PSI0IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjgiLz4KICA8cmVjdCB4PSI0NjAiIHk9IjI4MCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIxMiIgcng9IjQiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOCIvPgogIDwhLS0gYmFyYmVsbCBvbiByYWNrIC0tPgogIDxyZWN0IHg9IjgwIiB5PSIyMjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iMjAiIHJ4PSIxMCIgZmlsbD0iIzE1MmQ1MiIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBwbGF0ZXMgbGVmdCAtLT4KICA8Y2lyY2xlIGN4PSIxNjAiIGN5PSIyMzAiIHI9IjU1IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1IiBzdHJva2U9IiMxYTM1NjQiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLW9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjE2MCIgY3k9IjIzMCIgcj0iMzgiIGZpbGw9IiMwOTE4MjUiIG9wYWNpdHk9IjAuOSIvPgogIDxjaXJjbGUgY3g9IjE2MCIgY3k9IjIzMCIgcj0iMTQiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIxNSIgY3k9IjIzMCIgcj0iNDYiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gcGxhdGVzIHJpZ2h0IC0tPgogIDxjaXJjbGUgY3g9IjU0MCIgY3k9IjIzMCIgcj0iNTUiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZT0iIzFhMzU2NCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2Utb3BhY2l0eT0iMC40Ii8+CiAgPGNpcmNsZSBjeD0iNTQwIiBjeT0iMjMwIiByPSIzOCIgZmlsbD0iIzA5MTgyNSIgb3BhY2l0eT0iMC45Ii8+CiAgPGNpcmNsZSBjeD0iNTQwIiBjeT0iMjMwIiByPSIxNCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC40Ii8+CiAgPGNpcmNsZSBjeD0iNDg1IiBjeT0iMjMwIiByPSI0NiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBhdGhsZXRlIHVuZGVyIGJhciAtIHNxdWF0IGRvd24gcG9zaXRpb24gLS0+CiAgPGVsbGlwc2UgY3g9IjM1MCIgY3k9IjQ2OCIgcng9IjY1IiByeT0iMTUiIGZpbGw9IiMwMjA4MTAiIG9wYWNpdHk9IjAuNSIvPgogIDxjaXJjbGUgY3g9IjM1MCIgY3k9IjMyMCIgcj0iMzQiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHdpZGUgc3F1YXQgbGVncyAtLT4KICA8cGF0aCBkPSJNMzE4LDM5MCBRMjg1LDQzMCAyNjUsNDY4IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zODIsMzkwIFE0MTUsNDMwIDQzNSw0NjgiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSB0b3JzbyB1cHJpZ2h0IHNxdWF0IC0tPgogIDxyZWN0IHg9IjMxOCIgeT0iMzU0IiB3aWR0aD0iNjQiIGhlaWdodD0iMTEyIiByeD0iMTQiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGFybXMgb24gYmFyIC0tPgogIDxwYXRoIGQ9Ik0zMTgsMzY1IFEyODUsMzQ1IDI2NSwyMzUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNMzgyLDM2NSBRNDE1LDM0NSA0MzUsMjM1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBwb3dlciBnbG93IC0tPgogIDxjaXJjbGUgY3g9IjM1MCIgY3k9IjM4MCIgcng9IjIwMCIgcnk9IjIwMCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wNiIgZmlsdGVyPSJ1cmwoI2dmKSIvPgogIDwhLS0gd2VpZ2h0IG51bWJlcnMgb24gcGxhdGVzIC0tPgogIDx0ZXh0IHg9IjE2MCIgeT0iMjM1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzYjgyZjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNSI+NDU8L3RleHQ+CiAgPHRleHQgeD0iNTQwIiB5PSIyMzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC41Ij40NTwvdGV4dD4KPC9zdmc+') center/cover no-repeat;opacity:0.22;z-index:0;"></div>
+          <div style="position:relative;z-index:1;height:100%;">
+          <span class="class-num">02</span>
+          <span class="class-tag">Força</span>
+          <h3 class="class-name">STRENGTH LAB</h3>
+          <p class="class-desc">Levantamento de pesos com técnica supervisionada. Desenvolvemos força, potência e massa muscular com progressão estruturada e segura.</p>
+          <div class="class-meta">
+            <div class="class-meta-item"><strong>60 min</strong>Duração</div>
+            <div class="class-meta-item"><strong>Intermédio</strong>Nível</div>
+            <div class="class-meta-item"><strong>4x/sem</strong>Frequência</div>
+          </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide class-slide" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNTAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI0MCUiIHI9IjcwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTAiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjUiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwNDBiMWEiLz4KICA8cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIGtldHRsZWJlbGwgc3dpbmcgc2lsaG91ZXR0ZSAtLT4KICA8IS0tIGtldHRsZWJlbGwgLS0+CiAgPGNpcmNsZSBjeD0iMzQwIiBjeT0iMzUwIiByPSIzNSIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zMTUsMzI1IFEzNDAsMzAwIDM2NSwzMjUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIxNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIGF0aGxldGUgc3dpbmcgbW90aW9uIC0tPgogIDxjaXJjbGUgY3g9IjM1MCIgY3k9IjE2NSIgcj0iMzMiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSIzMjIiIHk9IjE5OCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjEwNSIgcng9IjE0IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBhcm1zIHN3aW5naW5nIGZvcndhcmQtZG93biAtLT4KICA8cGF0aCBkPSJNMzIyLDIxNSBRMzAwLDI3MCAzMzAsMzQ1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zNzgsMjE1IFE0MDAsMjcwIDM2MCwzNDUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBsZWdzIGhpcCBoaW5nZSAtLT4KICA8cGF0aCBkPSJNMzMwLDMwMCBRMzEwLDM3MCAyOTUsNDQwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zNzAsMzAwIFEzOTAsMzcwIDQwNSw0NDAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBzd2luZyBtb3Rpb24gYXJjIC0tPgogIDxwYXRoIGQ9Ik0zNDAsMzUwIFEyODAsMzAwIDI3MCwyMjAgUTI2OCwxNjUgMzEwLDEzMCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjYsNCIgb3BhY2l0eT0iMC4yNSIvPgogIDwhLS0gZW5lcmd5IGdsb3cgb24ga2V0dGxlYmVsbCAtLT4KICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSIzNTAiIHI9IjU1IiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjEiIGZpbHRlcj0idXJsKCNzZikiLz4KICA8IS0tIGZsb29yIC0tPgogIDxsaW5lIHgxPSIwIiB5MT0iNDU1IiB4Mj0iNzAwIiB5Mj0iNDU1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjUiLz4KICA8IS0tIGNpcmN1aXQgdGltZXIgZGlzcGxheSAtLT4KICA8cmVjdCB4PSI1NjUiIHk9IjMwIiB3aWR0aD0iMTEwIiBoZWlnaHQ9IjY1IiByeD0iNCIgZmlsbD0iIzA3MTAyMCIgb3BhY2l0eT0iMC45IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuNCIvPgogIDx0ZXh0IHg9IjYyMCIgeT0iNTgiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMyNTYzZWIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+My81PC90ZXh0PgogIDx0ZXh0IHg9IjYyMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMzYjgyZjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+Uk9OREFTPC90ZXh0Pgo8L3N2Zz4=') center/cover no-repeat;opacity:0.22;z-index:0;"></div>
+          <div style="position:relative;z-index:1;height:100%;">
+          <span class="class-num">03</span>
+          <span class="class-tag">Funcional</span>
+          <h3 class="class-name">CIRCUIT TRAINING</h3>
+          <p class="class-desc">Circuitos funcionais em grupo com kettlebells, battle ropes, caixas pliométricas e muito mais. Intensidade controlada, resultados máximos.</p>
+          <div class="class-meta">
+            <div class="class-meta-item"><strong>50 min</strong>Duração</div>
+            <div class="class-meta-item"><strong>Todos</strong>Nível</div>
+            <div class="class-meta-item"><strong>5x/sem</strong>Frequência</div>
+          </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide class-slide" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNTAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1NSUiIGN5PSI0MCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ibWIiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjQiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwNDBiMWEiLz4KICA8cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIHJvdyBvZiB0cmVhZG1pbGxzIHBlcnNwZWN0aXZlIC0tPgogIDxyZWN0IHg9IjUwIiB5PSIzMjAiIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIiByeD0iOCIgZmlsbD0iIzA4MTgyOCIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iMjEwIiB5PSIzMTAiIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiByeD0iOCIgZmlsbD0iIzA4MTgyOCIgb3BhY2l0eT0iMC44NSIvPgogIDxyZWN0IHg9IjM4MCIgeT0iMzAwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2NSIgcng9IjgiIGZpbGw9IiMwODE4MjgiIG9wYWNpdHk9IjAuOSIvPgogIDxyZWN0IHg9IjU2MCIgeT0iMjkwIiB3aWR0aD0iMTEwIiBoZWlnaHQ9IjE3MCIgcng9IjgiIGZpbGw9IiMwODE4MjgiIG9wYWNpdHk9IjAuODUiLz4KICA8IS0tIHRyZWFkbWlsbCBzdXJmYWNlcyAtLT4KICA8cmVjdCB4PSI2MCIgeT0iMzYwIiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjcwIiByeD0iNCIgZmlsbD0iIzA5MWEzMCIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjIwIiB5PSIzNTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iNzUiIHJ4PSI0IiBmaWxsPSIjMDkxYTMwIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSIzOTAiIHk9IjM0MCIgd2lkdGg9IjE0MCIgaGVpZ2h0PSI4MCIgcng9IjQiIGZpbGw9IiMwOTFhMzAiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gY29uc29sZXMgd2l0aCBzcGVlZCBkYXRhIC0tPgogIDxyZWN0IHg9IjkwIiB5PSIyODUiIHdpZHRoPSI4MCIgaGVpZ2h0PSI1NSIgcng9IjQiIGZpbGw9IiMwNjBmMjAiIG9wYWNpdHk9IjAuOSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjQiLz4KICA8dGV4dCB4PSIxMzAiIHk9IjMwOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzI1NjNlYiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC44Ij42LjU8L3RleHQ+CiAgPHRleHQgeD0iMTMwIiB5PSIzMjYiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iOSIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5rbS9oPC90ZXh0PgogIDxyZWN0IHg9IjI0NSIgeT0iMjc1IiB3aWR0aD0iODAiIGhlaWdodD0iNTUiIHJ4PSI0IiBmaWxsPSIjMDYwZjIwIiBvcGFjaXR5PSIwLjkiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2Utb3BhY2l0eT0iMC40Ii8+CiAgPHRleHQgeD0iMjg1IiB5PSIyOTgiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMyNTYzZWIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOCI+OC4wPC90ZXh0PgogIDx0ZXh0IHg9IjI4NSIgeT0iMzE2IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjkiIGZpbGw9IiMzYjgyZjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+a20vaDwvdGV4dD4KICA8cmVjdCB4PSI0MTUiIHk9IjI2NSIgd2lkdGg9IjgwIiBoZWlnaHQ9IjU1IiByeD0iNCIgZmlsbD0iIzA2MGYyMCIgb3BhY2l0eT0iMC45IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuNCIvPgogIDx0ZXh0IHg9IjQ1NSIgeT0iMjg4IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMjU2M2ViIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBvcGFjaXR5PSIwLjgiPjEwLjU8L3RleHQ+CiAgPHRleHQgeD0iNDU1IiB5PSIzMDYiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iOSIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5rbS9oPC90ZXh0PgogIDwhLS0gcnVubmVyIHNpbGhvdWV0dGUgb24gbWFpbiB0cmVhZG1pbGwgLS0+CiAgPGNpcmNsZSBjeD0iNDYwIiBjeT0iMTk1IiByPSIzMCIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxyZWN0IHg9IjQzNSIgeT0iMjI1IiB3aWR0aD0iNTAiIGhlaWdodD0iODAiIHJ4PSIxMiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik00MzUsMjQ1IFE0MDgsMjU1IDM5OCwyODAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTQ4NSwyNDUgUTUxMCwyNDAgNTIyLDI1NSIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjI0IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNNDQ0LDMwMyBRNDI2LDM1MCA0MTIsMzk1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik00NzYsMzAzIFE0OTYsMzQyIDUxMCwzNzUgUTUxOCw0MDAgNTA4LDQyMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjI2IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHNwZWVkIGdsb3cgLS0+CiAgPGNpcmNsZSBjeD0iNDYwIiBjeT0iMzAwIiByPSIxMzAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+') center/cover no-repeat;opacity:0.22;z-index:0;"></div>
+          <div style="position:relative;z-index:1;height:100%;">
+          <span class="class-num">04</span>
+          <span class="class-tag">Resistência</span>
+          <h3 class="class-name">ENDURANCE RUN</h3>
+          <p class="class-desc">Treino de resistência e capacidade aeróbica em passadeiras de última geração. Programas de corrida para 5K, 10K e maratonas.</p>
+          <div class="class-meta">
+            <div class="class-meta-item"><strong>45 min</strong>Duração</div>
+            <div class="class-meta-item"><strong>Iniciado</strong>Nível</div>
+            <div class="class-meta-item"><strong>Daily</strong>Frequência</div>
+          </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide class-slide" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNTAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjMiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjgiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwNTBjMWEiLz4KICA8cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIHlvZ2Evc3RyZXRjaCBtYXQgLS0+CiAgPHJlY3QgeD0iMTUwIiB5PSIzODAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMjAiIHJ4PSIxMCIgZmlsbD0iIzBhMTYyOCIgb3BhY2l0eT0iMC43Ii8+CiAgPHJlY3QgeD0iMTUwIiB5PSIzODUiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTIiIHJ4PSI2IiBmaWxsPSIjMGQyMDQwIiBvcGFjaXR5PSIwLjUiLz4KICA8IS0tIGF0aGxldGUgaW4gcGlnZW9uIHBvc2UgLS0+CiAgPGNpcmNsZSBjeD0iMzUwIiBjeT0iMjIwIiByPSIzNCIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gdXBwZXIgYm9keSBsZWFuaW5nIGZvcndhcmQgLS0+CiAgPHBhdGggZD0iTTMzMCwyNTQgUTI4MCwyOTUgMjUwLDM4MCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjQyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGZyb250IGxlZyBiZW50IChwaWdlb24pIC0tPgogIDxwYXRoIGQ9Ik0zNzAsMzMwIFEzOTAsMzU1IDQyMCwzNjUgUTQ2MCwzNzUgNDkwLDM4MCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjM0IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gYmFjayBsZWcgZXh0ZW5kZWQgLS0+CiAgPHBhdGggZD0iTTM1MCwzNTAgUTM2MCwzODAgMzc1LDQwMCBRNDAwLDQyMCA0MzAsNDMwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gYXJtcyBleHRlbmRlZCBmb3J3YXJkIHJlc3QgLS0+CiAgPHBhdGggZD0iTTMyNSwyNjAgUTMwNSwzMDUgMjkwLDM2MCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjIyIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0zMzUsMjU4IFEzMjAsMzEwIDMxNSwzNjUiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIxOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjgiLz4KICA8IS0tIGNhbG0gZ2xvdyAtIHNvZnRlciBibHVlIC0tPgogIDxjaXJjbGUgY3g9IjM1MCIgY3k9IjMzMCIgcj0iMTgwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA0IiBmaWx0ZXI9InVybCgjc2YpIi8+CiAgPGVsbGlwc2UgY3g9IjM1MCIgY3k9IjM5MCIgcng9IjE1MCIgcnk9IjI1IiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA2IiBmaWx0ZXI9InVybCgjc2YpIi8+CiAgPCEtLSB6ZW4gcGFydGljbGVzIC0gZmxvYXRpbmcgLS0+CiAgPGNpcmNsZSBjeD0iMjAwIiBjeT0iMTUwIiByPSIzIiBmaWxsPSIjM2I4MmY2IiBvcGFjaXR5PSIwLjMiLz4KICA8Y2lyY2xlIGN4PSI1MDAiIGN5PSIxMjAiIHI9IjIiIGZpbGw9IiMzYjgyZjYiIG9wYWNpdHk9IjAuMjUiLz4KICA8Y2lyY2xlIGN4PSI1NjAiIGN5PSIyMDAiIHI9IjIuNSIgZmlsbD0iIzNiODJmNiIgb3BhY2l0eT0iMC4yIi8+CiAgPGNpcmNsZSBjeD0iMTUwIiBjeT0iMjgwIiByPSIyIiBmaWxsPSIjM2I4MmY2IiBvcGFjaXR5PSIwLjIiLz4KPC9zdmc+') center/cover no-repeat;opacity:0.22;z-index:0;"></div>
+          <div style="position:relative;z-index:1;height:100%;">
+          <span class="class-num">05</span>
+          <span class="class-tag">Mobilidade</span>
+          <h3 class="class-name">FLEX & RECOVERY</h3>
+          <p class="class-desc">Recuperação activa, mobilidade articular e alongamento profundo. Essencial para prevenção de lesões e otimização da performance.</p>
+          <div class="class-meta">
+            <div class="class-meta-item"><strong>40 min</strong>Duração</div>
+            <div class="class-meta-item"><strong>Todos</strong>Nível</div>
+            <div class="class-meta-item"><strong>3x/sem</strong>Frequência</div>
+          </div>
+          </div>
+        </div>
+
+        <div class="swiper-slide class-slide" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNTAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSIzNSUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTAiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iZ2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjYiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjcwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwNDBiMWEiLz4KICA8cmVjdCB3aWR0aD0iNzAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIGJveGluZyBiYWcgY2hhaW4gLS0+CiAgPHJlY3QgeD0iMzQ1IiB5PSIyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjYwIiByeD0iNSIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC44Ii8+CiAgPCEtLSBoZWF2eSBiYWcgLS0+CiAgPHJlY3QgeD0iMjk1IiB5PSI4MCIgd2lkdGg9IjExMCIgaGVpZ2h0PSIyMjAiIHJ4PSI1NSIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxyZWN0IHg9IjMxMCIgeT0iMTE1IiB3aWR0aD0iODAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiMxNTJkNTIiIG9wYWNpdHk9IjAuNiIvPgogIDxyZWN0IHg9IjMxMCIgeT0iMTU1IiB3aWR0aD0iODAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiMxNTJkNTIiIG9wYWNpdHk9IjAuNSIvPgogIDxyZWN0IHg9IjMxMCIgeT0iMTk1IiB3aWR0aD0iODAiIGhlaWdodD0iOCIgcng9IjQiIGZpbGw9IiMxNTJkNTIiIG9wYWNpdHk9IjAuNCIvPgogIDwhLS0gRE9VQkxFIE0gb24gYmFnIChzdWJ0bGUpIC0tPgogIDx0ZXh0IHg9IjM1MCIgeT0iMjM1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOSIgZmlsbD0iIzI1NjNlYiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC4zIiBmb250LXdlaWdodD0iYm9sZCI+TU08L3RleHQ+CiAgPCEtLSBib3hlciBpbiBwdW5jaCBzdGFuY2UgLS0+CiAgPGNpcmNsZSBjeD0iNTQwIiBjeT0iMjEwIiByPSIzMiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDxyZWN0IHg9IjUxNCIgeT0iMjQyIiB3aWR0aD0iNTIiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gamFiIGV4dGVuZGVkIHRvd2FyZCBiYWcgLSBpbXBhY3QhIC0tPgogIDxwYXRoIGQ9Ik01MTQsMjU4IFE0NzAsMjYwIDQyMCwyOTAgUTQwMCwzMDIgNDA1LDMxMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjI4IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGJveGluZyBnbG92ZSBhdCBpbXBhY3QgLS0+CiAgPGVsbGlwc2UgY3g9IjQwOCIgY3k9IjMxMyIgcng9IjMwIiByeT0iMjIiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHJpZ2h0IGhhbmQgZ3VhcmQgdXAgLS0+CiAgPHBhdGggZD0iTTU2NiwyNTggUTU5MCwyNDAgNjAwLDIxNSBRNjA2LDIwMCA1OTgsMTg1IiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjYiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CiAgPGVsbGlwc2UgY3g9IjU5NiIgY3k9IjE4MCIgcng9IjI0IiByeT0iMTgiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gbGVncyBib3hpbmcgc3RhbmNlIC0tPgogIDxwYXRoIGQ9Ik01MjIsMzM1IFE1MDUsMzkwIDQ5NSw0NTAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTU1OCwzMzUgUTU3NSwzOTAgNTg1LDQ1MCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjMwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGltcGFjdCBlZmZlY3Qgb24gYmFnIC0tPgogIDxjaXJjbGUgY3g9IjQwNiIgY3k9IjMxMCIgcj0iNDUiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMTUiIGZpbHRlcj0idXJsKCNnZikiLz4KICA8Y2lyY2xlIGN4PSI0MDYiIGN5PSIzMTAiIHI9IjI1IiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjIiIGZpbHRlcj0idXJsKCNnZikiLz4KICA8IS0tIGVuZXJneSBzcGFya3MgZnJvbSBwdW5jaCAtLT4KICA8bGluZSB4MT0iNDA2IiB5MT0iMzEwIiB4Mj0iMzc1IiB5Mj0iMjgwIiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC40Ii8+CiAgPGxpbmUgeDE9IjQwNiIgeTE9IjMxMCIgeDI9IjM3MCIgeTI9IjMxMCIgc3Ryb2tlPSIjM2I4MmY2IiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC4zNSIvPgogIDxsaW5lIHgxPSI0MDYiIHkxPSIzMTAiIHgyPSIzNzUiIHkyPSIzNDAiIHN0cm9rZT0iIzNiODJmNiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjQiLz4KICA8IS0tIGRyYW1hdGljIHRvcCBsaWdodGluZyAtLT4KICA8ZWxsaXBzZSBjeD0iMzUwIiBjeT0iMCIgcng9IjIwMCIgcnk9IjgwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjE1Ii8+Cjwvc3ZnPg==') center/cover no-repeat;opacity:0.22;z-index:0;"></div>
+          <div style="position:relative;z-index:1;height:100%;">
+          <span class="class-num">06</span>
+          <span class="class-tag">Exclusiva</span>
+          <h3 class="class-name">BOXING FITNESS</h3>
+          <p class="class-desc">Treino de boxe adaptado ao fitness. Técnica, coordenação, agilidade e queima calórica intensa num ambiente de alta energia.</p>
+          <div class="class-meta">
+            <div class="class-meta-item"><strong>55 min</strong>Duração</div>
+            <div class="class-meta-item"><strong>Todos</strong>Nível</div>
+            <div class="class-meta-item"><strong>3x/sem</strong>Frequência</div>
+          </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</section>
+
+<!-- AMENITIES -->
+<section id="amenities" class="section-pad">
+  <div class="container">
+    <div class="amenities-split">
+      <div class="amenities-visual reveal-left">
+        <div class="amen-main">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNzAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSIwJSIgcj0iODAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWEzYTZlIiBzdG9wLW9wYWNpdHk9IjAuNCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAzMDkxMiIvPjwvcmFkaWFsR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImZsb29yIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBhMTYyOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAzMDgxMCIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8ZmlsdGVyIGlkPSJzZiI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iOCIvPjwvZmlsdGVyPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjcwMCIgZmlsbD0iIzA2MGUyMCIvPgogIDxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNzAwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gY2VpbGluZyBsaWdodHMgcGVyc3BlY3RpdmUgLS0+CiAgPHJlY3QgeD0iNTAiIHk9IjAiIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAiIGZpbGw9IiMwNDBjMWMiIG9wYWNpdHk9IjAuOSIvPgogIDxlbGxpcHNlIGN4PSIyMjUiIGN5PSIzMCIgcng9IjQwIiByeT0iMTAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI3NmKSIvPgogIDxlbGxpcHNlIGN4PSI0NTAiIGN5PSIzMCIgcng9IjQwIiByeT0iMTAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI3NmKSIvPgogIDxlbGxpcHNlIGN4PSI2NzUiIGN5PSIzMCIgcng9IjQwIiByeT0iMTAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI3NmKSIvPgogIDwhLS0gbGlnaHQgYmVhbXMgZnJvbSBjZWlsaW5nIC0tPgogIDxwb2x5Z29uIHBvaW50cz0iMTg1LDYwIDI2NSw2MCAzMjAsNDUwIDEzMCw0NTAiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuMDE1Ii8+CiAgPHBvbHlnb24gcG9pbnRzPSI0MTAsNjAgNDkwLDYwIDU0NSw0NTAgMzU1LDQ1MCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC4wMTUiLz4KICA8cG9seWdvbiBwb2ludHM9IjYzNSw2MCA3MTUsNjAgNzcwLDQ1MCA1ODAsNDUwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjAxNSIvPgogIDwhLS0gZmxvb3IgcGVyc3BlY3RpdmUgLS0+CiAgPHJlY3QgeT0iNDUwIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0idXJsKCNmbG9vcikiLz4KICA8IS0tIGZsb29yIHJlZmxlY3Rpb24gbGluZXMgLS0+CiAgPGxpbmUgeDE9IjAiIHkxPSI0NzAiIHgyPSI5MDAiIHkyPSI0NzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjUiLz4KICA8bGluZSB4MT0iMCIgeTE9IjUwMCIgeDI9IjkwMCIgeTI9IjUwMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMyIvPgogIDwhLS0gY2FibGUgbWFjaGluZSBsZWZ0IC0tPgogIDxyZWN0IHg9IjMwIiB5PSIxMDAiIHdpZHRoPSIxNjAiIGhlaWdodD0iMzgwIiByeD0iNiIgZmlsbD0iIzA4MTUyNSIgb3BhY2l0eT0iMC45NSIvPgogIDxyZWN0IHg9IjU1IiB5PSIxMjAiIHdpZHRoPSIxMTAiIGhlaWdodD0iMzAwIiByeD0iNCIgZmlsbD0iIzBhMWEzMCIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iODAiIHk9IjE0MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjUwIiByeD0iNCIgZmlsbD0iIzBkMjA0MCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMTEwIiBjeT0iMTc1IiByPSIyMCIgZmlsbD0iIzFhM2E2ZSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMTEwIiBjeT0iMTc1IiByPSIxMCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC40Ii8+CiAgPCEtLSBjYWJsZSBtYWNoaW5lIHJpZ2h0IC0tPgogIDxyZWN0IHg9IjcxMCIgeT0iMTAwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjM4MCIgcng9IjYiIGZpbGw9IiMwODE1MjUiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSI3MzUiIHk9IjEyMCIgd2lkdGg9IjExMCIgaGVpZ2h0PSIzMDAiIHJ4PSI0IiBmaWxsPSIjMGExYTMwIiBvcGFjaXR5PSIwLjkiLz4KICA8Y2lyY2xlIGN4PSI3OTAiIGN5PSIxNzUiIHI9IjIwIiBmaWxsPSIjMWEzYTZlIiBvcGFjaXR5PSIwLjciLz4KICA8Y2lyY2xlIGN4PSI3OTAiIGN5PSIxNzUiIHI9IjEwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjQiLz4KICA8IS0tIGR1bWJiZWxsIHJhY2sgY2VudGVyLWxlZnQgLS0+CiAgPHJlY3QgeD0iMjAwIiB5PSIyODAiIHdpZHRoPSIyMjAiIGhlaWdodD0iMjAwIiByeD0iNCIgZmlsbD0iIzA4MTUyNSIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjE1IiB5PSIyOTUiIHdpZHRoPSIxOTAiIGhlaWdodD0iMzUiIHJ4PSIzIiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPHJlY3QgeD0iMjE1IiB5PSIzNDUiIHdpZHRoPSIxOTAiIGhlaWdodD0iMzUiIHJ4PSIzIiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjgiLz4KICA8cmVjdCB4PSIyMTUiIHk9IjM5NSIgd2lkdGg9IjE5MCIgaGVpZ2h0PSIzNSIgcng9IjMiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuNzUiLz4KICA8IS0tIGR1bWJiZWxscyBvbiByYWNrIC0tPgogIDxyZWN0IHg9IjIyNSIgeT0iMjk4IiB3aWR0aD0iNTAiIGhlaWdodD0iMjUiIHJ4PSIxMiIgZmlsbD0iIzE1MmQ1MiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjkwIiB5PSIyOTgiIHdpZHRoPSI1MCIgaGVpZ2h0PSIyNSIgcng9IjEyIiBmaWxsPSIjMTUyZDUyIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSIzNTUiIHk9IjI5OCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiMxNTJkNTIiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gdHJlYWRtaWxscyBwZXJzcGVjdGl2ZSByb3cgLS0+CiAgPHJlY3QgeD0iNDgwIiB5PSIzMDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTYwIiByeD0iOCIgZmlsbD0iIzA4MTUyNSIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iNTkwIiB5PSIzMDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTYwIiByeD0iOCIgZmlsbD0iIzA4MTUyNSIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gY29uc29sZSBzY3JlZW5zIGdsb3dpbmcgLS0+CiAgPHJlY3QgeD0iNTAwIiB5PSIyNDAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI0NSIgcng9IjQiIGZpbGw9IiMwNzEwMjAiIG9wYWNpdHk9IjAuOSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjQiLz4KICA8cmVjdCB4PSI1MDAiIHk9IjI0MyIgd2lkdGg9IjYwIiBoZWlnaHQ9IjM5IiByeD0iMyIgZmlsbD0iIzA1MGUxYyIgb3BhY2l0eT0iMC45NSIvPgogIDx0ZXh0IHg9IjUzMCIgeT0iMjYyIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMjU2M2ViIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBvcGFjaXR5PSIwLjciPjcuMjwvdGV4dD4KICA8IS0tIGZsb29yIHJlZmxlY3Rpb25zIG9mIG1hY2hpbmVzIC0tPgogIDxlbGxpcHNlIGN4PSIxMTAiIGN5PSI0NjAiIHJ4PSI3MCIgcnk9IjEyIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA4IiBmaWx0ZXI9InVybCgjc2YpIi8+CiAgPGVsbGlwc2UgY3g9Ijc5MCIgY3k9IjQ2MCIgcng9IjcwIiByeT0iMTIiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMDgiIGZpbHRlcj0idXJsKCNzZikiLz4KICA8IS0tIGFtYmllbnQgYmx1ZSBnbG93IGNlbnRlciAtLT4KICA8ZWxsaXBzZSBjeD0iNDUwIiBjeT0iMzUwIiByeD0iMjgwIiByeT0iMjAwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA0IiBmaWx0ZXI9InVybCgjc2YpIi8+Cjwvc3ZnPg==" alt="Academia DOUBLE M" style="width:100%;height:100%;object-fit:cover;opacity:0.7;display:block;">
+        </div>
+
+      </div>
+      <div>
+        <span class="section-label reveal">O Nosso Espaço</span>
+        <h2 class="section-title reveal">AMBIENTE<br>DE ELITE</h2>
+        <p class="section-desc reveal" style="margin-bottom:2.5rem;">Infraestrutura de classe mundial no coração de Talatona. Cada detalhe foi pensado para a tua melhor performance.</p>
+        <div class="amenities-list">
+          <div class="amen-item reveal">
+            <div class="amen-icon">🏋</div>
+            <div class="amen-text">
+              <h4>Equipamento Technogym</h4>
+              <p>Equipamentos de última geração das melhores marcas de fitness do mundo. Cardio, pesos livres e máquinas de resistência.</p>
+            </div>
+          </div>
+          <div class="amen-item reveal">
+            <div class="amen-icon">🚿</div>
+            <div class="amen-text">
+              <h4>Balneários Premium</h4>
+              <p>Instalações luxuosas com cacifos individuais, duches de alta pressão, toalhas e amenities de qualidade.</p>
+            </div>
+          </div>
+          <div class="amen-item reveal">
+            <div class="amen-icon">❄</div>
+            <div class="amen-text">
+              <h4>Clima Controlado</h4>
+              <p>Sistema de climatização avançado para manter o ambiente perfeito durante todo o teu treino, em qualquer estação.</p>
+            </div>
+          </div>
+          <div class="amen-item reveal">
+            <div class="amen-icon">📡</div>
+            <div class="amen-text">
+              <h4>Wi-Fi Premium & Música</h4>
+              <p>Ligação de alta velocidade e sistema de som premium para uma experiência imersiva de treino.</p>
+            </div>
+          </div>
+          <div class="amen-item reveal">
+            <div class="amen-icon">🛡</div>
+            <div class="amen-text">
+              <h4>Segurança 24H</h4>
+              <p>Videovigilância e controlo de acessos para garantir total segurança e tranquilidade dos nossos membros.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFESTYLE -->
+<section id="lifestyle" class="section-pad">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;">
+      <div>
+        <span class="section-label reveal">Lifestyle</span>
+        <h2 class="section-title reveal">MAIS DO QUE<br>UMA ACADEMIA</h2>
+      </div>
+      <p class="section-desc reveal">Um espaço onde se constrói disciplina, se forja carácter e se partilha uma comunidade de alto desempenho.</p>
+    </div>
+    <div class="lifestyle-grid">
+      <div class="life-cell reveal-scale">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNzAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI0MCUiIGN5PSI0MCUiIHI9IjcwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjciLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMjA4MTAiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iZ2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjgiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI3MDAiIGZpbGw9IiMwNTBjMWEiLz4KICA8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjcwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIGRlYWRsaWZ0IHBsYXRmb3JtIC0tPgogIDxyZWN0IHg9IjEwMCIgeT0iNTYwIiB3aWR0aD0iNzAwIiBoZWlnaHQ9IjIwIiByeD0iNCIgZmlsbD0iIzA4MTgyOCIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBiYXJiZWxsIG9uIGZsb29yIC0tPgogIDxyZWN0IHg9IjEwMCIgeT0iNTQyIiB3aWR0aD0iNzAwIiBoZWlnaHQ9IjIwIiByeD0iMTAiIGZpbGw9IiMwZjIwNDAiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGxhcmdlIHBsYXRlcyAtLT4KICA8Y2lyY2xlIGN4PSIxNzUiIGN5PSI1NTIiIHI9IjU4IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1IiBzdHJva2U9IiMxYTNhNmUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLW9wYWNpdHk9IjAuNSIvPgogIDxjaXJjbGUgY3g9IjE3NSIgY3k9IjU1MiIgcj0iNDIiIGZpbGw9IiMwYTE2MjgiIG9wYWNpdHk9IjAuOSIvPgogIDxjaXJjbGUgY3g9IjE3NSIgY3k9IjU1MiIgcj0iMTIiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuNSIvPgogIDxjaXJjbGUgY3g9IjcyNSIgY3k9IjU1MiIgcj0iNTgiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZT0iIzFhM2E2ZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2Utb3BhY2l0eT0iMC41Ii8+CiAgPGNpcmNsZSBjeD0iNzI1IiBjeT0iNTUyIiByPSI0MiIgZmlsbD0iIzBhMTYyOCIgb3BhY2l0eT0iMC45Ii8+CiAgPGNpcmNsZSBjeD0iNzI1IiBjeT0iNTUyIiByPSIxMiIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC41Ii8+CiAgPCEtLSBzZWNvbmQgcGxhdGVzIC0tPgogIDxjaXJjbGUgY3g9IjIzNSIgY3k9IjU1MiIgcj0iNTAiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDxjaXJjbGUgY3g9IjY2NSIgY3k9IjU1MiIgcj0iNTAiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gYXRobGV0ZSBkZWFkbGlmdGluZyAtIHBvd2VyIHBvc2l0aW9uIC0tPgogIDxlbGxpcHNlIGN4PSI0NTAiIGN5PSI2MDAiIHJ4PSI4MCIgcnk9IjIwIiBmaWxsPSIjMDIwODEwIiBvcGFjaXR5PSIwLjUiLz4KICA8IS0tIGxlZ3MgLS0+CiAgPHBhdGggZD0iTTQxMCw0NTAgUTM5MCw1MDUgMzc1LDU2MCIgc3Ryb2tlPSIjMGMxZTNhIiBzdHJva2Utd2lkdGg9IjM4IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNNDkwLDQ1MCBRNTEwLDUwNSA1MjUsNTYwIiBzdHJva2U9IiMwYzFlM2EiIHN0cm9rZS13aWR0aD0iMzgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gYmVudCB0b3JzbyAtLT4KICA8ZWxsaXBzZSBjeD0iNDUwIiBjeT0iMzgwIiByeD0iNjAiIHJ5PSI5MCIgZmlsbD0iIzBkMjA0MCIgb3BhY2l0eT0iMC4yIi8+CiAgPHBhdGggZD0iTTQwMCw0NzAgUTM5MCw0MjAgNDAwLDM2MCBRNDEwLDMwMCA0MzAsMjUwIiBzdHJva2U9IiMwYzFlM2EiIHN0cm9rZS13aWR0aD0iNTIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gYXJtcyBncmlwcGluZyBiYXIgLS0+CiAgPHBhdGggZD0iTTQyNSw0NDAgUTQwMCw0OTAgMzgwLDU0NSIgc3Ryb2tlPSIjMGMxZTNhIiBzdHJva2Utd2lkdGg9IjI4IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNNDc1LDQ0MCBRNTAwLDQ5MCA1MjAsNTQ1IiBzdHJva2U9IiMwYzFlM2EiIHN0cm9rZS13aWR0aD0iMjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gaGVhZCAtLT4KICA8Y2lyY2xlIGN4PSI0NDAiIGN5PSIyMTUiIHI9IjM4IiBmaWxsPSIjMGMxZTNhIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBpbnRlbnNlIGdsb3cgLS0+CiAgPGNpcmNsZSBjeD0iNDUwIiBjeT0iNDAwIiByeD0iMjAwIiByeT0iMjAwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA3IiBmaWx0ZXI9InVybCgjZ2YpIi8+CiAgPCEtLSBlbmVyZ3kgbGluZXMgLS0+CiAgPGxpbmUgeDE9IjM1MCIgeTE9IjY1MCIgeDI9IjI4MCIgeTI9IjcwMCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuMTUiLz4KICA8bGluZSB4MT0iNTUwIiB5MT0iNjUwIiB4Mj0iNjIwIiB5Mj0iNzAwIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC4xNSIvPgo8L3N2Zz4=" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.75;display:block;transition:transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);">
+        <div class="life-overlay"><span class="life-caption">Força & Potência</span></div>
+      </div>
+      <div class="life-cell reveal-scale">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI2MCUiIGN5PSIzMCUiIHI9IjYwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzA1MGMxYSIvPgogIDxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iNjAwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gcHVsbCB1cCBiYXIgLS0+CiAgPHJlY3QgeD0iMTAwIiB5PSI4MCIgd2lkdGg9IjQwMCIgaGVpZ2h0PSIxNiIgcng9IjgiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSIxNTAiIHk9IjgwIiB3aWR0aD0iMTYiIGhlaWdodD0iNTAiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDxyZWN0IHg9IjQzNCIgeT0iODAiIHdpZHRoPSIxNiIgaGVpZ2h0PSI1MCIgZmlsbD0iIzBkMWYzYyIgb3BhY2l0eT0iMC45Ii8+CiAgPCEtLSBhdGhsZXRlIGRvaW5nIHB1bGwtdXAgLSBhcm1zIHVwIC0tPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjIwNSIgcj0iMzQiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSIyNzAiIHk9IjIzOSIgd2lkdGg9IjYwIiBoZWlnaHQ9IjEwNSIgcng9IjE0IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBhcm1zIHJlYWNoaW5nIHVwIHRvIGJhciAtLT4KICA8cGF0aCBkPSJNMjcwLDI1NSBRMjQ1LDIwMCAyMTAsMTQwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zMzAsMjU1IFEzNTUsMjAwIDM5MCwxNDAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBsZWdzIGhhbmdpbmcgYmVudCAtLT4KICA8cGF0aCBkPSJNMjgwLDM0MiBRMjY1LDM5NSAyNTUsNDUwIFEyNDgsNDkwIDI2MCw1MjAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTMyMCwzNDIgUTMzNSwzOTUgMzQ1LDQ1MCBRMzUyLDQ5MCAzNDAsNTIwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gZHJhbWF0aWMgc3BvdGxpZ2h0IC0tPgogIDxwb2x5Z29uIHBvaW50cz0iMjIwLDAgMzgwLDAgNDMwLDYwMCAxNzAsNjAwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjAxNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMjAwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA2Ii8+Cjwvc3ZnPg==" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;display:block;transition:transform 0.8s;">
+        <div class="life-overlay"><span class="life-caption">Alta Energia</span></div>
+      </div>
+      <div class="life-cell reveal-scale">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI1NjNlYiIgc3RvcC1vcGFjaXR5PSIwLjIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0ic2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjYiLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMwNTBjMWEiLz4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIGdyb3VwIGNsYXNzIHNpbGhvdWV0dGVzIC0tPgogIDwhLS0gcGVyc29uIDEgLSBqdW1waW5nIGphY2sgLS0+CiAgPGNpcmNsZSBjeD0iMTMwIiBjeT0iMjIwIiByPSIyOCIgZmlsbD0iIzBhMTYyOCIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iMTEwIiB5PSIyNDgiIHdpZHRoPSI0MCIgaGVpZ2h0PSI4NSIgcng9IjEwIiBmaWxsPSIjMGExNjI4IiBvcGFjaXR5PSIwLjgiLz4KICA8bGluZSB4MT0iODAiIHkxPSIyODUiIHgyPSIxODAiIHkyPSIyNzUiIHN0cm9rZT0iIzBhMTYyOCIgc3Ryb2tlLXdpZHRoPSIyNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjgiLz4KICA8cGF0aCBkPSJNMTE4LDMzMCBROTgsMzgwIDgwLDQyMCIgc3Ryb2tlPSIjMGExNjI4IiBzdHJva2Utd2lkdGg9IjI2IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOCIvPgogIDxwYXRoIGQ9Ik0xNDIsMzMwIFExNjIsMzgwIDE4MCw0MjAiIHN0cm9rZT0iIzBhMTYyOCIgc3Ryb2tlLXdpZHRoPSIyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjgiLz4KICA8IS0tIHBlcnNvbiAyIC0gY2VudGVyIGJ1cnBlZSBqdW1wIC0tPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjE4MCIgcj0iMzAiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8cmVjdCB4PSIyNzgiIHk9IjIxMCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjkwIiByeD0iMTIiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNMjc4LDIzNSBRMjUwLDIxNSAyMjUsMjEwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMjgiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDxwYXRoIGQ9Ik0zMjIsMjM1IFEzNTAsMjE1IDM3NSwyMTAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTI4NiwyOTggUTI3NSwzNjAgMjYyLDQyMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjMwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNMzE0LDI5OCBRMzI1LDM2MCAzMzgsNDIwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gcGVyc29uIDMgLS0+CiAgPGNpcmNsZSBjeD0iNDcwIiBjeT0iMjIwIiByPSIyOCIgZmlsbD0iIzBhMTYyOCIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iNDUwIiB5PSIyNDgiIHdpZHRoPSI0MCIgaGVpZ2h0PSI4NSIgcng9IjEwIiBmaWxsPSIjMGExNjI4IiBvcGFjaXR5PSIwLjgiLz4KICA8bGluZSB4MT0iNDIwIiB5MT0iMjc1IiB4Mj0iNTIwIiB5Mj0iMjg1IiBzdHJva2U9IiMwYTE2MjgiIHN0cm9rZS13aWR0aD0iMjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC44Ii8+CiAgPHBhdGggZD0iTTQ1OCwzMzAgUTQzOCwzODAgNDIwLDQyMCIgc3Ryb2tlPSIjMGExNjI4IiBzdHJva2Utd2lkdGg9IjI2IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOCIvPgogIDxwYXRoIGQ9Ik00ODIsMzMwIFE1MDIsMzgwIDUyMCw0MjAiIHN0cm9rZT0iIzBhMTYyOCIgc3Ryb2tlLXdpZHRoPSIyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjgiLz4KICA8IS0tIGVuZXJneS9ncm91cCBnbG93IC0tPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMjIwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjA0IiBmaWx0ZXI9InVybCgjc2YpIi8+CiAgPCEtLSBmbG9vciBsaW5lIC0tPgogIDxsaW5lIHgxPSIwIiB5MT0iNDgwIiB4Mj0iNjAwIiB5Mj0iNDgwIiBzdHJva2U9IiMxYTNhNmUiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC4zIi8+Cjwvc3ZnPg==" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;display:block;transition:transform 0.8s;">
+        <div class="life-overlay"><span class="life-caption">Intensidade</span></div>
+      </div>
+      <div class="life-cell reveal-scale">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhM2E2ZSIgc3RvcC1vcGFjaXR5PSIwLjQiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iZ2YiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjciLz48L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiMwNTBjMWEiLz4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0idXJsKCNiZykiLz4KICA8IS0tIHNob3VsZGVyIHByZXNzIHdpdGggYmFyYmVsbCAtLT4KICA8ZWxsaXBzZSBjeD0iMzAwIiBjeT0iNTcwIiByeD0iNzAiIHJ5PSIxOCIgZmlsbD0iIzAyMDgxMCIgb3BhY2l0eT0iMC41Ii8+CiAgPCEtLSBsZWdzIC0tPgogIDxwYXRoIGQ9Ik0yNjUsNDQwIFEyNTUsNTAwIDI1MCw1NzAiIHN0cm9rZT0iIzBjMWUzYSIgc3Ryb2tlLXdpZHRoPSIzNCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTMzNSw0NDAgUTM0NSw1MDAgMzUwLDU3MCIgc3Ryb2tlPSIjMGMxZTNhIiBzdHJva2Utd2lkdGg9IjM0IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHRvcnNvIC0tPgogIDxyZWN0IHg9IjI2NSIgeT0iMzEwIiB3aWR0aD0iNzAiIGhlaWdodD0iMTQwIiByeD0iMTYiIGZpbGw9IiMwYzFlM2EiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIGFybXMgcHJlc3Npbmcgb3ZlcmhlYWQgLS0+CiAgPHBhdGggZD0iTTI2NSwzMzAgUTIyNSwyOTAgMjAwLDIzMCIgc3Ryb2tlPSIjMGMxZTNhIiBzdHJva2Utd2lkdGg9IjMwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiLz4KICA8cGF0aCBkPSJNMzM1LDMzMCBRMzc1LDI5MCA0MDAsMjMwIiBzdHJva2U9IiMwYzFlM2EiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gYmFyYmVsbCBvdmVyaGVhZCAtLT4KICA8cmVjdCB4PSIxMzAiIHk9IjIxNSIgd2lkdGg9IjM0MCIgaGVpZ2h0PSIxOCIgcng9IjkiIGZpbGw9IiMxYTNhNmUiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gcGxhdGVzIC0tPgogIDxjaXJjbGUgY3g9IjE1MCIgY3k9IjIyNCIgcj0iMzgiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjMiLz4KICA8Y2lyY2xlIGN4PSI0NTAiIGN5PSIyMjQiIHI9IjM4IiBmaWxsPSIjMGQxZjNjIiBvcGFjaXR5PSIwLjkiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2Utb3BhY2l0eT0iMC4zIi8+CiAgPCEtLSBoZWFkIC0tPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjI3NSIgcj0iMzUiIGZpbGw9IiMwYzFlM2EiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIHBvd2VyIGdsb3cgb3ZlcmhlYWQgLS0+CiAgPGVsbGlwc2UgY3g9IjMwMCIgY3k9IjIyNCIgcng9IjEyMCIgcnk9IjQwIiBmaWxsPSIjMjU2M2ViIiBvcGFjaXR5PSIwLjEiIGZpbHRlcj0idXJsKCNnZikiLz4KICA8Y2lyY2xlIGN4PSIzMDAiIGN5PSIzNTAiIHI9IjE4MCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wNSIgZmlsdGVyPSJ1cmwoI2dmKSIvPgo8L3N2Zz4=" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;display:block;transition:transform 0.8s;">
+        <div class="life-overlay"><span class="life-caption">Mindset Elite</span></div>
+      </div>
+      <div class="life-cell reveal-scale">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjY1JSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE1MmQ1MiIgc3RvcC1vcGFjaXR5PSIwLjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMzA5MTIiLz48L3JhZGlhbEdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzA1MGMxYSIvPgogIDxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iNjAwIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDwhLS0gY29tbXVuaXR5IC0gdHdvIHBlb3BsZSBoaWdoIGZpdmUgYWZ0ZXIgd29ya291dCAtLT4KICA8IS0tIHBlcnNvbiBsZWZ0IC0tPgogIDxjaXJjbGUgY3g9IjE4NSIgY3k9IjIzMCIgcj0iMzIiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDxyZWN0IHg9IjE2MCIgeT0iMjYyIiB3aWR0aD0iNTAiIGhlaWdodD0iMTAwIiByeD0iMTIiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik0xNjAsMjgwIFExMzAsMjk1IDExNSwzMzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIGFybSByYWlzZWQgZm9yIGhpZ2ggZml2ZSAtLT4KICA8cGF0aCBkPSJNMjEwLDI4MCBRMjQwLDI1NSAyNzAsMjQwIFEyOTUsMjI4IDMxNSwyMjAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNMTcwLDM2MCBRMTU4LDQyMCAxNTIsNTAwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CiAgPHBhdGggZD0iTTIwMCwzNjAgUTIwOCw0MjAgMjEyLDUwMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjMwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gcGVyc29uIHJpZ2h0IC0tPgogIDxjaXJjbGUgY3g9IjQxNSIgY3k9IjIzMCIgcj0iMzIiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDxyZWN0IHg9IjM5MCIgeT0iMjYyIiB3aWR0aD0iNTAiIGhlaWdodD0iMTAwIiByeD0iMTIiIGZpbGw9IiMwZDFmM2MiIG9wYWNpdHk9IjAuOSIvPgogIDxwYXRoIGQ9Ik00NDAsMjgwIFE0NzAsMjk1IDQ4NSwzMzAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8IS0tIGFybSByYWlzZWQgZm9yIGhpZ2ggZml2ZSAtLT4KICA8cGF0aCBkPSJNMzkwLDI4MCBRMzYwLDI1NSAzMzAsMjQwIFEzMDUsMjI4IDI4NSwyMjAiIHN0cm9rZT0iIzBkMWYzYyIgc3Ryb2tlLXdpZHRoPSIyOCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNNDAwLDM2MCBRMzkyLDQyMCAzODgsNTAwIiBzdHJva2U9IiMwZDFmM2MiIHN0cm9rZS13aWR0aD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CiAgPHBhdGggZD0iTTQzMCwzNjAgUTQzOCw0MjAgNDQyLDUwMCIgc3Ryb2tlPSIjMGQxZjNjIiBzdHJva2Utd2lkdGg9IjMwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOSIvPgogIDwhLS0gaGlnaCBmaXZlIGltcGFjdCBnbG93IC0tPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjIxOCIgcj0iMzUiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjIxOCIgcj0iMjAiIGZpbGw9IiMzYjgyZjYiIG9wYWNpdHk9IjAuNiIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjIxOCIgcj0iNjAiIGZpbGw9IiMyNTYzZWIiIG9wYWNpdHk9IjAuMTUiLz4KICA8IS0tIGVuZXJneSBzcGFya3MgLS0+CiAgPGxpbmUgeDE9IjMwMCIgeTE9IjIxOCIgeDI9IjI2MCIgeTI9IjE3NSIgc3Ryb2tlPSIjM2I4MmY2IiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9IjAuNSIvPgogIDxsaW5lIHgxPSIzMDAiIHkxPSIyMTgiIHgyPSIzNDAiIHkyPSIxNzUiIHN0cm9rZT0iIzNiODJmNiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjUiLz4KICA8bGluZSB4MT0iMzAwIiB5MT0iMjE4IiB4Mj0iMjgwIiB5Mj0iMTYwIiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjQiLz4KICA8bGluZSB4MT0iMzAwIiB5MT0iMjE4IiB4Mj0iMzIwIiB5Mj0iMTYwIiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjQiLz4KICA8Y2lyY2xlIGN4PSIzMDAiIGN5PSIzODAiIHI9IjIwMCIgZmlsbD0iIzI1NjNlYiIgb3BhY2l0eT0iMC4wNSIvPgo8L3N2Zz4=" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;display:block;transition:transform 0.8s;">
+        <div class="life-overlay"><span class="life-caption">Comunidade</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section id="quote">
+  <div class="container">
+    <p class="quote-text reveal">"O teu corpo conquista o que a tua mente acredita."</p>
+    <p class="quote-sub reveal">DOUBLE M — Performance, Disciplina, Evolução</p>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section id="plans" class="section-pad">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:1rem;">
+      <span class="section-label reveal">Membros</span>
+      <h2 class="section-title reveal">PLANOS DE<br>MEMBRESIA</h2>
+      <p class="section-desc reveal" style="margin:0 auto;text-align:center;max-width:500px;">Escolhe o plano que melhor se adapta ao teu estilo de vida e objectivos. Todos os planos incluem acesso total ao espaço.</p>
+    </div>
+    <div class="plans-grid">
+
+      <div class="plan-card reveal-left">
+        <span class="plan-tier">Plano 01</span>
+        <div class="plan-name">BÁSICO</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Acesso à sala de musculação</li>
+          <li><span class="check">✓</span>Área de cardio</li>
+          <li><span class="check">✓</span>Balneários premium</li>
+          <li><span class="check">✓</span>Wi-Fi & estacionamento</li>
+          <li><span class="check">✓</span>2 aulas colectivas/mês</li>
+        </ul>
+        <a href="#contact" class="plan-cta">Começar Agora</a>
+        <p class="plan-note">Contrato mensal · Sem compromisso</p>
+      </div>
+
+      <div class="plan-card featured reveal">
+        <div class="plan-badge">Mais Popular</div>
+        <span class="plan-tier">Plano 02</span>
+        <div class="plan-name">PREMIUM</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Tudo do plano Básico</li>
+          <li><span class="check">✓</span>Aulas colectivas ilimitadas</li>
+          <li><span class="check">✓</span>1 sessão personal/mês</li>
+          <li><span class="check">✓</span>Plano de treino personalizado</li>
+          <li><span class="check">✓</span>Avaliação física mensal</li>
+          <li><span class="check">✓</span>Acesso prioritário a horários</li>
+        </ul>
+        <a href="#contact" class="plan-cta">Começar Agora</a>
+        <p class="plan-note">Contrato trimestral · Melhor valor</p>
+      </div>
+
+      <div class="plan-card reveal-right">
+        <span class="plan-tier">Plano 03</span>
+        <div class="plan-name">ELITE</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Tudo do plano Premium</li>
+          <li><span class="check">✓</span>Personal trainer dedicado</li>
+          <li><span class="check">✓</span>Plano nutricional integrado</li>
+          <li><span class="check">✓</span>Sessões ilimitadas 1-para-1</li>
+          <li><span class="check">✓</span>Acompanhamento 24/7</li>
+          <li><span class="check">✓</span>Acesso VIP exclusivo</li>
+        </ul>
+        <a href="#contact" class="plan-cta">Começar Agora</a>
+        <p class="plan-note">Contrato anual · Experiência total</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section-pad">
+  <div class="container">
+    <div class="contact-grid">
+      <div>
+        <span class="section-label reveal">Contacto</span>
+        <h2 class="section-title reveal">VAMOS<br>COMEÇAR</h2>
+        <p class="section-desc reveal" style="margin-bottom:3rem;">Agenda uma visita gratuita ao espaço ou inscreve-te hoje. A tua transformação começa aqui.</p>
+
+        <div class="contact-info-item reveal">
+          <div class="contact-info-icon">📍</div>
+          <div class="contact-info-text">
+            <label>Localização</label>
+            <p>Talatona, Luanda, Angola</p>
+          </div>
+        </div>
+        <div class="contact-info-item reveal">
+          <div class="contact-info-icon">📞</div>
+          <div class="contact-info-text">
+            <label>Telefone</label>
+            <p>930 110 400</p>
+          </div>
+        </div>
+        <div class="contact-info-item reveal">
+          <div class="contact-info-icon">🕐</div>
+          <div class="contact-info-text">
+            <label>Horário</label>
+            <p>Segunda a Domingo — 6H às 22H</p>
+          </div>
+        </div>
+        <div class="contact-info-item reveal">
+          <div class="contact-info-icon">📱</div>
+          <div class="contact-info-text">
+            <label>Redes Sociais</label>
+            <p>Em breve</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal-right">
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">Nome</label>
+              <input type="text" id="fname" placeholder="O teu nome" required>
+            </div>
+            <div class="form-group">
+              <label for="tel">Telemóvel</label>
+              <input type="tel" id="tel" placeholder="9XX XXX XXX" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="email@exemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label for="interesse">Interesse</label>
+            <select id="interesse">
+              <option value="">Selecciona o teu objectivo</option>
+              <option>Musculação & Força</option>
+              <option>Perda de Peso</option>
+              <option>Personal Training</option>
+              <option>Transformação Corporal</option>
+              <option>Aulas Colectivas</option>
+              <option>Visita ao Espaço</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="plano">Plano de Interesse</label>
+            <select id="plano">
+              <option value="">Escolhe um plano</option>
+              <option>Básico</option>
+              <option>Premium</option>
+              <option>Elite</option>
+              <option>Não tenho a certeza</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="msg">Mensagem (opcional)</label>
+            <textarea id="msg" rows="3" placeholder="Conta-nos sobre os teus objectivos..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Enviar Inscrição →</button>
+        </form>
+        <div id="form-success" style="display:none;margin-top:1.5rem;padding:1.5rem;background:rgba(37,99,235,0.15);border:1px solid var(--electric);font-family:var(--font-condensed);letter-spacing:0.1em;color:var(--electric-bright);">
+          ✓ MENSAGEM ENVIADA — ENTRAREMOS EM CONTACTO EM BREVE!
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <span class="footer-brand-logo">DOUBLE<span>M</span></span>
+        <p class="footer-tagline">O wellness center e academia premium de Talatona. Onde a performance encontra o lifestyle. Onde a disciplina gera resultados.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" title="Instagram">IG</a>
+          <a href="#" class="social-btn" title="Facebook">FB</a>
+          <a href="tel:930110400" class="social-btn" title="Telefone">📞</a>
+        </div>
+      </div>
+      <div>
+        <span class="footer-col-title">Programas</span>
+        <ul class="footer-links">
+          <li><a href="#programs">Musculação</a></li>
+          <li><a href="#programs">Treino Funcional</a></li>
+          <li><a href="#programs">Cardio Performance</a></li>
+          <li><a href="#programs">Personal Training</a></li>
+          <li><a href="#programs">Transformação</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Espaço</span>
+        <ul class="footer-links">
+          <li><a href="#amenities">Equipamentos</a></li>
+          <li><a href="#amenities">Balneários</a></li>
+          <li><a href="#modalidades">Aulas</a></li>
+          <li><a href="#plans">Membros</a></li>
+          <li><a href="#contact">Visita</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-col-title">Contacto</span>
+        <ul class="footer-links">
+          <li><a href="tel:930110400">930 110 400</a></li>
+          <li><a href="#contact">Talatona, Luanda</a></li>
+          <li><a href="#contact">Seg–Dom: 6H–22H</a></li>
+          <li><a href="#contact">Inscrição Online</a></li>
+          <li><a href="#contact">Redes: Em Breve</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 DOUBLE M Wellness Center. Todos os direitos reservados.</p>
+      <a href="https://www.instagram.com/websitesrapidos.ao" target="_blank" rel="noopener" class="footer-wrao">Feito por <span>WRAO</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR ──────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursor-follower');
+let mx = 0, my = 0, fx = 0, fy = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  fx += (mx - fx) * 0.12; fy += (my - fy) * 0.12;
+  follower.style.left = fx + 'px'; follower.style.top = fy + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a, button, .program-card, .class-slide, .amen-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; follower.style.opacity = '0.8'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; follower.style.opacity = '0.5'; });
+});
+
+// ── LOADER ──────────────────────────────────────────────
+const loader = document.getElementById('loader');
+const loaderLogo = document.getElementById('loader-logo');
+const loaderBar = document.getElementById('loader-bar');
+const loaderPct = document.getElementById('loader-pct');
+
+gsap.to(loaderLogo, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.2 });
+let pct = 0;
+const pctInterval = setInterval(() => {
+  pct += Math.random() * 4 + 1;
+  if (pct >= 100) { pct = 100; clearInterval(pctInterval); finishLoad(); }
+  loaderBar.style.width = pct + '%';
+  loaderPct.textContent = Math.floor(pct) + '%';
+}, 40);
+
+function finishLoad() {
+  setTimeout(() => {
+    gsap.to(loader, {
+      opacity: 0, duration: 0.8, ease: 'power2.inOut',
+      onComplete: () => { loader.style.display = 'none'; initAnimations(); }
+    });
+  }, 300);
+}
+
+// ── THREE.JS HERO 3D ──────────────────────────────────
+function initThree() {
+  const canvas = document.getElementById('hero-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, canvas.offsetWidth / canvas.offsetHeight, 0.1, 100);
+  camera.position.set(0, 0, 5);
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+  scene.add(ambientLight);
+  const blueLight = new THREE.PointLight(0x2563eb, 3, 20);
+  blueLight.position.set(-3, 3, 3);
+  scene.add(blueLight);
+  const rimLight = new THREE.PointLight(0x3b82f6, 2, 15);
+  rimLight.position.set(4, -2, 2);
+  scene.add(rimLight);
+  const topLight = new THREE.PointLight(0xffffff, 1.5, 20);
+  topLight.position.set(0, 5, 3);
+  scene.add(topLight);
+
+  // Materials
+  const matMetal = new THREE.MeshStandardMaterial({ color: 0x1a3a6e, metalness: 0.9, roughness: 0.15, envMapIntensity: 1 });
+  const matAccent = new THREE.MeshStandardMaterial({ color: 0x2563eb, metalness: 0.8, roughness: 0.2, emissive: 0x0a1f55, emissiveIntensity: 0.3 });
+  const matChrome = new THREE.MeshStandardMaterial({ color: 0x8ab4f8, metalness: 1.0, roughness: 0.05 });
+
+  // Helper: dumbbell
+  function makeDumbbell(x, y, z, scale=1) {
+    const group = new THREE.Group();
+    // bar
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.04*scale, 0.04*scale, 1.4*scale, 12), matChrome);
+    bar.rotation.z = Math.PI / 2;
+    group.add(bar);
+    // plates
+    [-0.55, 0.55].forEach(pos => {
+      const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.22*scale, 0.22*scale, 0.18*scale, 20), matMetal);
+      plate.rotation.z = Math.PI / 2;
+      plate.position.x = pos * scale;
+      group.add(plate);
+      // inner plate ring
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.12*scale, 0.015*scale, 8, 20), matAccent);
+      ring.position.x = pos * scale;
+      group.add(ring);
+    });
+    group.position.set(x, y, z);
+    return group;
+  }
+
+  // Helper: kettlebell
+  function makeKettlebell(x, y, z, scale=1) {
+    const group = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.SphereGeometry(0.22*scale, 20, 20), matMetal);
+    body.position.y = -0.05*scale;
+    group.add(body);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.14*scale, 0.025*scale, 8, 20), matAccent);
+    handle.position.y = 0.22*scale;
+    handle.rotation.x = Math.PI/2;
+    group.add(handle);
+    group.position.set(x, y, z);
+    return group;
+  }
+
+  // Helper: barbell (horizontal)
+  function makeBarbell(x, y, z, scale=1) {
+    const group = new THREE.Group();
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.025*scale, 0.025*scale, 2.4*scale, 10), matChrome);
+    shaft.rotation.z = Math.PI/2;
+    group.add(shaft);
+    [-0.9, -0.65, 0.65, 0.9].forEach((pos, i) => {
+      const r = i===0||i===3 ? 0.3 : 0.24;
+      const plate = new THREE.Mesh(new THREE.CylinderGeometry(r*scale, r*scale, 0.06*scale, 16), i%2===0 ? matMetal : matAccent);
+      plate.rotation.z = Math.PI/2;
+      plate.position.x = pos*scale;
+      group.add(plate);
+    });
+    group.position.set(x, y, z);
+    return group;
+  }
+
+  // Particles
+  function makeParticles(count=200) {
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(count * 3);
+    for (let i=0;i<count;i++) {
+      pos[i*3] = (Math.random()-0.5)*14;
+      pos[i*3+1] = (Math.random()-0.5)*10;
+      pos[i*3+2] = (Math.random()-0.5)*8 - 3;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({ color: 0x2563eb, size: 0.025, transparent: true, opacity: 0.6 });
+    return new THREE.Points(geo, mat);
+  }
+
+  const db1 = makeDumbbell(-2.5, 0.6, 0, 1.1);
+  const db2 = makeDumbbell(2.8, -0.8, -0.5, 0.8);
+  const db3 = makeDumbbell(-1.5, -1.6, -1, 0.6);
+  const kb1 = makeKettlebell(2.2, 1.2, 0.3, 1.0);
+  const kb2 = makeKettlebell(-3.2, -1.0, -0.8, 0.75);
+  const bar = makeBarbell(0.3, 2.0, -1.5, 0.85);
+  const particles = makeParticles(250);
+
+  [db1, db2, db3, kb1, kb2, bar, particles].forEach(obj => scene.add(obj));
+
+  let t = 0;
+  let targetRotY = 0, currentRotY = 0;
+  document.addEventListener('mousemove', e => {
+    targetRotY = (e.clientX / window.innerWidth - 0.5) * 0.4;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.008;
+    currentRotY += (targetRotY - currentRotY) * 0.04;
+
+    db1.rotation.x = t * 0.5;
+    db1.rotation.y = t * 0.3 + currentRotY;
+    db1.position.y = 0.6 + Math.sin(t*0.7) * 0.15;
+
+    db2.rotation.y = -t * 0.4 + currentRotY * 0.5;
+    db2.rotation.z = t * 0.2;
+    db2.position.y = -0.8 + Math.cos(t*0.9) * 0.12;
+
+    db3.rotation.x = t * 0.6;
+    db3.position.y = -1.6 + Math.sin(t*1.1+1) * 0.1;
+
+    kb1.rotation.y = t * 0.6 + currentRotY * 0.7;
+    kb1.position.y = 1.2 + Math.sin(t*0.8+2) * 0.18;
+
+    kb2.rotation.y = -t * 0.5;
+    kb2.position.y = -1.0 + Math.cos(t*0.6+1) * 0.14;
+
+    bar.rotation.z = t * 0.2;
+    bar.rotation.y = t * 0.15 + currentRotY * 0.3;
+    bar.position.y = 2.0 + Math.sin(t*0.5) * 0.1;
+
+    particles.rotation.y = t * 0.02;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const w = canvas.offsetWidth, h = canvas.offsetHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+}
+
+// ── GSAP SCROLL ANIMATIONS ─────────────────────────────
+function initAnimations() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero entrance
+  gsap.to('.hero-eyebrow', { opacity: 1, duration: 0.8, delay: 0.3, ease: 'power3.out' });
+  gsap.to('.hero-headline', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
+  gsap.to('.hero-sub', { opacity: 1, duration: 0.8, delay: 0.9, ease: 'power3.out' });
+  gsap.to('.hero-ctas', { opacity: 1, duration: 0.8, delay: 1.1, ease: 'power3.out' });
+  gsap.to('.hero-scroll', { opacity: 1, duration: 0.8, delay: 1.5, ease: 'power3.out' });
+
+  // Init Three.js after loader
+  initThree();
+
+  // Parallax hero grid
+  gsap.to('.hero-grid', {
+    scrollTrigger: { trigger: '#hero', scrub: 1.5, start: 'top top', end: 'bottom top' },
+    y: 80
+  });
+
+  // Reveal elements
+  gsap.utils.toArray('.reveal').forEach((el, i) => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
+      delay: (i % 3) * 0.08
+    });
+  });
+  gsap.utils.toArray('.reveal-left').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, x: 0, duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+    });
+  });
+  gsap.utils.toArray('.reveal-right').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, x: 0, duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+    });
+  });
+  gsap.utils.toArray('.reveal-scale').forEach((el, i) => {
+    gsap.to(el, {
+      opacity: 1, scale: 1, duration: 0.7,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
+      delay: (i % 5) * 0.06
+    });
+  });
+
+  // Quote parallax
+  gsap.from('#quote .quote-text', {
+    scrollTrigger: { trigger: '#quote', scrub: 1 },
+    x: -50, opacity: 0.7
+  });
+}
+
+// ── NAV ──────────────────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── MOBILE NAV ──────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobile-nav');
+hamburger.addEventListener('click', () => mobileNav.classList.toggle('open'));
+function closeMobileNav() { mobileNav.classList.remove('open'); }
+
+// ── SWIPER ──────────────────────────────────────────
+new Swiper('#classesSwiper', {
+  slidesPerView: 1.1,
+  spaceBetween: 1,
+  navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+  breakpoints: {
+    640: { slidesPerView: 2.1 },
+    1024: { slidesPerView: 3.1 }
+  }
+});
+
+// ── FORM ──────────────────────────────────────────
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('form-success').style.display = 'block';
+  e.target.reset();
+  setTimeout(() => { document.getElementById('form-success').style.display = 'none'; }, 5000);
+}
+
+// ── SMOOTH SCROLL NAV ─────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
